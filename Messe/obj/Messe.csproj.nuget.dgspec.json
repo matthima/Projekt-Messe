@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Megaport\\Source\\Repos\\Projekt-Messe\\Messe\\Messe.csproj": {}
+    "C:\\Users\\Megaport\\source\\repos\\Projekt-Messe\\Messe\\Messe.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Megaport\\Source\\Repos\\Projekt-Messe\\Messe\\Messe.csproj": {
+    "C:\\Users\\Megaport\\source\\repos\\Projekt-Messe\\Messe\\Messe.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Megaport\\Source\\Repos\\Projekt-Messe\\Messe\\Messe.csproj",
+        "projectUniqueName": "C:\\Users\\Megaport\\source\\repos\\Projekt-Messe\\Messe\\Messe.csproj",
         "projectName": "Messe",
-        "projectPath": "C:\\Users\\Megaport\\Source\\Repos\\Projekt-Messe\\Messe\\Messe.csproj",
+        "projectPath": "C:\\Users\\Megaport\\source\\repos\\Projekt-Messe\\Messe\\Messe.csproj",
         "packagesPath": "C:\\Users\\Megaport\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Megaport\\Source\\Repos\\Projekt-Messe\\Messe\\obj\\",
+        "outputPath": "C:\\Users\\Megaport\\source\\repos\\Projekt-Messe\\Messe\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Megaport\\AppData\\Roaming\\NuGet\\NuGet.Config",
