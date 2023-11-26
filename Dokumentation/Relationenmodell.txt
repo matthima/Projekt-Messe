@@ -1,0 +1,17 @@
+Relationenmodell:
+
+Legende: 
+*name* -> Primary key
+-name- -> Foreign key
+
+
+Kunden (*kunden_id*,vorname,nachname,plz,ort,straße,nr,foto,firmenvertreter,-firma_id-)
+
+Firmen (*firma_id*,name)
+
+Produktgruppen (*produktgruppe_id*,name)
+
+Produktgruppe-Kunde-Verbindung (*id*,-produktgruppen_id-,-kunden_id-)
+
+User (*user_id*,name,passwort) 
+
