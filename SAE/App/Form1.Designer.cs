@@ -38,7 +38,7 @@
             cbProduktgruppen1 = new ComboBox();
             cbProduktgruppen2 = new ComboBox();
             cbProduktgruppen3 = new ComboBox();
-            button1 = new Button();
+            bAusweisErstellen = new Button();
             flpFirma = new FlowLayoutPanel();
             cbFirmenvertreter = new CheckBox();
             lbFirma = new Label();
@@ -112,6 +112,7 @@
             bWebcamStarten.TabIndex = 0;
             bWebcamStarten.Text = "Webcam starten";
             bWebcamStarten.UseVisualStyleBackColor = true;
+            bWebcamStarten.Click += bWebcamStarten_Click;
             // 
             // pbWebcamOutput
             // 
@@ -119,6 +120,7 @@
             pbWebcamOutput.Location = new Point(3, 32);
             pbWebcamOutput.Name = "pbWebcamOutput";
             pbWebcamOutput.Size = new Size(574, 448);
+            pbWebcamOutput.SizeMode = PictureBoxSizeMode.Zoom;
             pbWebcamOutput.TabIndex = 1;
             pbWebcamOutput.TabStop = false;
             // 
@@ -140,6 +142,8 @@
             bBildAufnehmen.TabIndex = 0;
             bBildAufnehmen.Text = "Bild aufnehmen";
             bBildAufnehmen.UseVisualStyleBackColor = true;
+            bBildAufnehmen.Visible = false;
+            bBildAufnehmen.Click += bBildAufnehmen_Click;
             // 
             // bNeuesBildAufnehmen
             // 
@@ -149,13 +153,15 @@
             bNeuesBildAufnehmen.TabIndex = 1;
             bNeuesBildAufnehmen.Text = "Neues Bild aufnehmen";
             bNeuesBildAufnehmen.UseVisualStyleBackColor = true;
+            bNeuesBildAufnehmen.Visible = false;
+            bNeuesBildAufnehmen.Click += bNeuesBildAufnehmen_Click;
             // 
             // flpProduktgruppen
             // 
             tlpMainFrame.SetColumnSpan(flpProduktgruppen, 2);
             flpProduktgruppen.Controls.Add(lbProduktgruppen);
             flpProduktgruppen.Controls.Add(flpProduktgruppenDropdowns);
-            flpProduktgruppen.Controls.Add(button1);
+            flpProduktgruppen.Controls.Add(bAusweisErstellen);
             flpProduktgruppen.Dock = DockStyle.Fill;
             flpProduktgruppen.FlowDirection = FlowDirection.TopDown;
             flpProduktgruppen.Location = new Point(4, 525);
@@ -212,16 +218,17 @@
             cbProduktgruppen3.Size = new Size(225, 23);
             cbProduktgruppen3.TabIndex = 2;
             // 
-            // button1
+            // bAusweisErstellen
             // 
-            button1.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            button1.Location = new Point(985, 90);
-            button1.Margin = new Padding(985, 15, 3, 3);
-            button1.Name = "button1";
-            button1.Size = new Size(180, 30);
-            button1.TabIndex = 7;
-            button1.Text = "Kundenausweis erstellen";
-            button1.UseVisualStyleBackColor = true;
+            bAusweisErstellen.Enabled = false;
+            bAusweisErstellen.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            bAusweisErstellen.Location = new Point(985, 90);
+            bAusweisErstellen.Margin = new Padding(985, 15, 3, 3);
+            bAusweisErstellen.Name = "bAusweisErstellen";
+            bAusweisErstellen.Size = new Size(180, 30);
+            bAusweisErstellen.TabIndex = 7;
+            bAusweisErstellen.Text = "Kundenausweis erstellen";
+            bAusweisErstellen.UseVisualStyleBackColor = true;
             // 
             // flpFirma
             // 
@@ -249,6 +256,7 @@
             cbFirmenvertreter.Text = "Firmenvertretung";
             ttFirmenvertreter.SetToolTip(cbFirmenvertreter, "Vertreten Sie eine Firma? Tragen Sie den Haken ein, um den Namen Ihrer Firma auf Ihrem Ausweis zu vermerken.");
             cbFirmenvertreter.UseVisualStyleBackColor = true;
+            cbFirmenvertreter.CheckedChanged += cbFirmenvertreter_CheckedChanged;
             // 
             // lbFirma
             // 
@@ -260,6 +268,7 @@
             lbFirma.Size = new Size(43, 19);
             lbFirma.TabIndex = 4;
             lbFirma.Text = "Firma";
+            lbFirma.Visible = false;
             // 
             // tbFirma
             // 
@@ -268,6 +277,7 @@
             tbFirma.Name = "tbFirma";
             tbFirma.Size = new Size(225, 23);
             tbFirma.TabIndex = 5;
+            tbFirma.Visible = false;
             // 
             // flpStammdaten
             // 
@@ -405,6 +415,8 @@
             MinimumSize = new Size(1200, 750);
             Name = "Form1";
             Text = "Kundenausweis-Generator";
+            FormClosed += Form1_FormClosed;
+            Load += Form1_Load;
             tlpMainFrame.ResumeLayout(false);
             flpWebcamPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)pbWebcamOutput).EndInit();
@@ -453,7 +465,7 @@
         private TextBox tbFirma;
         private Label lbFirma;
         private FlowLayoutPanel flpFirma;
-        private Button button1;
+        private Button bAusweisErstellen;
         private Label label1;
         private ToolTip ttFirmenvertreter;
     }
