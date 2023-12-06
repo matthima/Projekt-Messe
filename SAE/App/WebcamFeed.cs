@@ -33,7 +33,7 @@ namespace App {
         }
 
         public void StopFeed() {
-            webcam.SignalToStop();
+             webcam.SignalToStop();
+            }
         }
     }
-}
