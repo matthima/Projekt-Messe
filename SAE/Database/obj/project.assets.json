@@ -2564,23 +2564,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\matth\\.nuget\\packages\\": {},
+    "C:\\Users\\Hein\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\matth\\source\\repos\\Projekt-Messe\\SAE\\Database\\Database.csproj",
+      "projectUniqueName": "C:\\Users\\Hein\\source\\repos\\Projekt-Messe\\SAE\\Database\\Database.csproj",
       "projectName": "Database",
-      "projectPath": "C:\\Users\\matth\\source\\repos\\Projekt-Messe\\SAE\\Database\\Database.csproj",
-      "packagesPath": "C:\\Users\\matth\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\matth\\source\\repos\\Projekt-Messe\\SAE\\Database\\obj\\",
+      "projectPath": "C:\\Users\\Hein\\source\\repos\\Projekt-Messe\\SAE\\Database\\Database.csproj",
+      "packagesPath": "C:\\Users\\Hein\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Hein\\source\\repos\\Projekt-Messe\\SAE\\Database\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\matth\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Hein\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
