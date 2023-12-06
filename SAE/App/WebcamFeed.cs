@@ -1,10 +1,5 @@
 ﻿using AForge.Video;
 using AForge.Video.DirectShow;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace App {
     internal class WebcamFeed {
@@ -33,7 +28,9 @@ namespace App {
         }
 
         public void StopFeed() {
-            webcam.SignalToStop();
+            if (webcam != null) {
+                webcam.SignalToStop();
+            }
         }
     }
-}
+ }

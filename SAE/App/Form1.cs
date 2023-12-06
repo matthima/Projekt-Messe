@@ -3,6 +3,7 @@ namespace App {
         public Form1() {
             InitializeComponent();
             this.feed = new WebcamFeed(pbWebcamOutput);
+            // TODO: initialize DBCOntext
         }
 
         private WebcamFeed feed;
@@ -53,6 +54,8 @@ namespace App {
                 tbVorname.Text != "",
                 tbStrasse.Text != "",
                 tbNummer.Text != "",
+                (cbFirmenvertreter.Checked && tbFirma.Text != "") || !cbFirmenvertreter.Checked,
+                pbWebcamOutput.Image != null,
             };
             bAusweisErstellen.Enabled = conditions.All(cond => cond);
         }
