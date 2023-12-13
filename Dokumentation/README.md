@@ -76,6 +76,15 @@ Informieren: WLAN Controller, RADIUS, AAA-Server
 
 ### Netzwerk Einrichtung und IP-Zuweisung
 
+192.168.4.128 / 25
+
+1111 1111.1111 1111.1111 1111.1000 0000
+
+Kunden Netz:192.168.4.128 / 26
+Firmen Netz: 192.168.4.192 /26
+
+Subnetzmaske 255.255.255.192
+
 ### Routing
 
 ## WLAN
