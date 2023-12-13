@@ -70,6 +70,8 @@ Informieren: WLAN Controller, RADIUS, AAA-Server
 
 ## Netzwerkinfrastruktur Stand
 
+Es existiert bereits eine Netzwerkinfastruktur auf der Messe und es wurde uns mitgeteilt, dass wir uns an dieser betiligen dürfen. Das bedeutet wir haben eine IP-Adresse erhalten die wir im Messe Netzwerk verwenden können.
+
 ### Netzwerkaufbau
 
 ### Anbindung Messenetzwerk
