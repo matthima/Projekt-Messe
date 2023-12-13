@@ -9,3 +9,7 @@
 /SAE/App/.vs
 /SAE/App/bin
 /SAE/App/obj
+/SAE/Database/.vs
+/SAE/Database/bin
+/SAE/Database/obj
+/SAE/Database/Migration
