@@ -92,7 +92,25 @@ Informieren: WLAN Controller, RADIUS, AAA-Server
 
 ### Datenbankmodell z.B. Relationen-Modell
 
+#### Datenbankmodell
+
+Siehe PDF namens ER-Modell
+
+#### Relationen-Modell
+
+Legende: 
+*name* -> Primary key
+-name- -> Foreign key
+
+Kunde (*KundenId*,Vorname,Nachname,PLZ,Ort,Straße,Hausnummer,Foto,Firmenvertreter,-FirmaId-)
+Firma (*FirmaId*,Name)
+Produktgruppe (*ProduktgruppeId*,Name)
+ProduktgruppeKunde (*ProduktgruppeKundeId*,-ProduktgruppeId-,-KundeId-)
+User (*UserId*,Name,Passwort) 
+
 ## Aufbau und Funktionsweise
+
+Die Datenbank wurde mithilfe des Entity Frameworks erstellt und umgesetzt.
 
 ### Architektur
 
