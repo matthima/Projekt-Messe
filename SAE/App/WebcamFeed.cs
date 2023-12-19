@@ -13,7 +13,7 @@ namespace App {
         public void Start() {
             feedTarget.Image = null;
             FilterInfoCollection videoDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
-            if (videoDevices.Count > 0 ) {
+            if (videoDevices.Count > 0) {
                 webcam = new VideoCaptureDevice(videoDevices[0].MonikerString);
                 webcam.NewFrame += new NewFrameEventHandler(FrameEventHandler);
                 webcam.Start();
@@ -24,7 +24,7 @@ namespace App {
         }
 
         public void FrameEventHandler(object sender, NewFrameEventArgs e) {
-            feedTarget.Image = (Bitmap) e.Frame.Clone();
+            feedTarget.Image = (Bitmap)e.Frame.Clone();
         }
 
         public void StopFeed() {
@@ -33,4 +33,4 @@ namespace App {
             }
         }
     }
- }
+}

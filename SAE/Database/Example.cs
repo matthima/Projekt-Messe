@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Reflection.Metadata;
-
-using var db = new MesseContext();
+﻿using var db = new MesseContext();
 // Note: This sample requires the database to be created before running.
 Console.WriteLine($"Database path: {db.DbPath}.");
 
@@ -11,8 +7,7 @@ Console.WriteLine("Deleting Users");
 var user = db.Users
     .OrderBy(b => b.UserId).ToList();
 
-for (int i = 0; i < db.Users.Count(); i++)
-{
+for (int i = 0; i < db.Users.Count(); i++) {
     db.Remove(user[i]);
 }
 db.SaveChanges();
@@ -29,8 +24,7 @@ Console.WriteLine("Deleting Produktgruppen");
 var produktgruppen = db.Produktgruppe
     .OrderBy(b => b.ProduktgruppeId).ToList();
 
-for (int i = 0; i < db.Produktgruppe.Count(); i++)
-{
+for (int i = 0; i < db.Produktgruppe.Count(); i++) {
     db.Remove(produktgruppen[i]);
 }
 db.SaveChanges();

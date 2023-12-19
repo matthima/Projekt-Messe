@@ -1,8 +1,6 @@
-using Microsoft.EntityFrameworkCore;
-using MesseAPI.Models;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 //using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography;
 
@@ -35,8 +33,7 @@ ConfigureJwtAuthentication(builder.Services, key);
 var app = builder.Build();
 
 // Im Entwicklungsmodus wird Swagger für die API-Dokumentation aktiviert.
-if (app.Environment.IsDevelopment())
-{
+if (app.Environment.IsDevelopment()) {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
@@ -54,15 +51,12 @@ app.MapControllers();
 app.Run();
 
 // JWT-Authentifizierungskonfiguration
-void ConfigureJwtAuthentication(IServiceCollection services, byte[] key)
-{
+void ConfigureJwtAuthentication(IServiceCollection services, byte[] key) {
     services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-        .AddJwtBearer(options =>
-        {
+        .AddJwtBearer(options => {
             options.RequireHttpsMetadata = false;
             options.SaveToken = true;
-            options.TokenValidationParameters = new TokenValidationParameters
-            {
+            options.TokenValidationParameters = new TokenValidationParameters {
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(key),
                 ValidateIssuer = false,
@@ -72,11 +66,9 @@ void ConfigureJwtAuthentication(IServiceCollection services, byte[] key)
 }
 
 // Methode für die zufällige Generierung eines Schlüssels
-byte[] GenerateRandomKey(int length)
-{
+byte[] GenerateRandomKey(int length) {
     byte[] randomBytes;
-    using (var rng = RandomNumberGenerator.Create())
-    {
+    using (var rng = RandomNumberGenerator.Create()) {
         randomBytes = new byte[length];
         rng.GetBytes(randomBytes);
     }
