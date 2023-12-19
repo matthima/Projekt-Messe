@@ -5,13 +5,13 @@ Legende:
 -name- -> Foreign key
 
 
-Kunden (*kunden_id*,vorname,nachname,plz,ort,straße,nr,foto,firmenvertreter,-firma_id-)
+Kunde (*KundenId*,Vorname,Nachname,PLZ,Ort,Straße,Hausnummer,Foto,Firmenvertreter,-FirmaId-)
 
-Firmen (*firma_id*,name)
+Firma (*FirmaId*,Name)
 
-Produktgruppen (*produktgruppe_id*,name)
+Produktgruppe (*ProduktgruppeId*,Name)
 
-Produktgruppe-Kunde-Verbindung (*id*,-produktgruppen_id-,-kunden_id-)
+ProduktgruppeKunde (*ProduktgruppeKundeId*,-ProduktgruppeId-,-KundeId-)
 
-User (*user_id*,name,passwort) 
+User (*UserId*,Name,Passwort) 
 

@@ -70,11 +70,22 @@ Informieren: WLAN Controller, RADIUS, AAA-Server
 
 ## Netzwerkinfrastruktur Stand
 
+Es existiert bereits eine Netzwerkinfastruktur auf der Messe und es wurde uns mitgeteilt, dass wir uns an dieser betiligen dürfen. Das bedeutet wir haben eine IP-Adresse erhalten die wir im Messe Netzwerk verwenden können.
+
 ### Netzwerkaufbau
 
 ### Anbindung Messenetzwerk
 
 ### Netzwerk Einrichtung und IP-Zuweisung
+
+192.168.4.128 / 25
+
+1111 1111.1111 1111.1111 1111.1000 0000
+
+Kunden Netz:192.168.4.128 / 26
+Firmen Netz: 192.168.4.192 /26
+
+Subnetzmaske 255.255.255.192
 
 ### Routing
 
@@ -92,7 +103,25 @@ Informieren: WLAN Controller, RADIUS, AAA-Server
 
 ### Datenbankmodell z.B. Relationen-Modell
 
+#### Datenbankmodell
+
+Siehe PDF namens ER-Modell
+
+#### Relationen-Modell
+
+Legende: 
+*name* -> Primary key
+-name- -> Foreign key
+
+Kunde (*KundenId*,Vorname,Nachname,PLZ,Ort,Straße,Hausnummer,Foto,Firmenvertreter,-FirmaId-)
+Firma (*FirmaId*,Name)
+Produktgruppe (*ProduktgruppeId*,Name)
+ProduktgruppeKunde (*ProduktgruppeKundeId*,-ProduktgruppeId-,-KundeId-)
+User (*UserId*,Name,Passwort) 
+
 ## Aufbau und Funktionsweise
+
+Die Datenbank wurde mithilfe des Entity Frameworks erstellt und umgesetzt.
 
 ### Architektur
 

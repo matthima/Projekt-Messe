@@ -28,7 +28,7 @@ public class MesseContext : DbContext
 
 public class Kunde
 {
-    public required int KundeId { get; set; }
+    public int KundeId { get; set; }
     public required string Vorname { get; set; }
     public required string Nachname { get; set; }
     public required int PLZ { get; set; }
@@ -43,7 +43,7 @@ public class Kunde
 
 public class Firma
 {
-    public required int FirmaId { get; set; }
+    public int FirmaId { get; set; }
     public required string Name { get; set; }
 }
 
@@ -55,13 +55,13 @@ public class Produktgruppe
 
 public class ProduktgruppeKunde
 {
-    public required int ProduktgruppeKundeId { get; set; }
+    public int ProduktgruppeKundeId { get; set; }
     public required int ProduktgruppeId { get; set; }
     public required int KundeId { get; set; }
 }
 public class User
 {
-    public required int UserId { get; set; }
+    public int UserId { get; set; }
     public required string Name { get; set; }
     public required string Passwort { get; set; }
 }
