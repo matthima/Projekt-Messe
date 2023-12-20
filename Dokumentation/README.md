@@ -70,38 +70,47 @@ Informieren: WLAN Controller, RADIUS, AAA-Server
 
 ## Netzwerkinfrastruktur Stand
 
-Es existiert bereits eine Netzwerkinfastruktur auf der Messe und es wurde uns mitgeteilt, dass wir uns an dieser betiligen dürfen. Das bedeutet wir haben eine IP-Adresse erhalten die wir im Messe Netzwerk verwenden können.
+Auf der Messse existiert bereits ein vollständiges Netz. Dieses wird dabei in ein öffentliches und privates Netz aufgeteilt. Dadurch, dass das öffentliche Netz vermieden werden soll stellt der Veranstalter der Messe einen Internetfähigen Router zur Verfügung mit einer IP-Adresse in welcher Subnetze erstellt werden können. Die zur Verfügung gestellte IP-Adresse lautet wie folgt: 192.168.4.128/25.
 
-### Netzwerkaufbau
+Mithilfe dieses Internetfähigen Routers und der IP-Adresse wird das Netzwerk aufgebaut auf der Messe die Kundeninformationen aufnehmen zu können und zu der Firma schicken zu können.
 
-### Anbindung Messenetzwerk
+### Netzwerkaufbau & Funktionsweise
+
+Der Aufbau des Netzes auf der Messe soll unterteilt werden in zwei verschiedene Netze. In einem dieser Netze sollen sich die Firmeneigenen Geräte befinden und in dem anderen Netz die Geräte für die Kunden.
+Dabei soll das Firmennetz platz für 16 Geräte besitzen und das Kundennetz für 4 Geräte. 
+
+Vorerst war von dem Kunden verlangt, dass diese beiden Netze getrennt voneinander arbeiten sollten, dass bedeutet, dass sie keine Verbidnung zueinadner haben und die Geräte von dem einen Netz nicht in das andere gelangen können. Nach Rücksprache mit dem Kunden wurde allerdings verinbart, dass diese Anforderung verfällt um Kosten zu sparen, denn um diese Anforderung erfüllen zu können müssten mehr Geräte, sowie Kabel eingekauft werden.
+
+Aufgrund der Einigung mit dem Kunden, dass die Netze nicht mehr streng von einander getrennt sein müssen wurde das Netzwerk wie folgt aufgebaut. An den von der Messe bereitgestellten Internetfähigen Router wurden von uns zwei AccessPoints angeschlossen. Es wurden AccessPoints gewählt, da diese die Verbindung mit den Geräten vor Ort erleichtern, dadurch, dass diese über WLAN beweltigt wird und keine weiteren Kabeln von nöten sind. 
+
+Der eine AccesPoint dient für den Zugang der Kundengeräte. Der jeweils andere für den Zugang der Firmengeräte. Beide AccessPoints sind durch das Protokoll WPA2-PSK gesichert und einem selbstgewähltem Kennwort.
+
+Das Kennwort um sich mit dem Kundennetz zu verbinden lautet: KundenNetz.
+Das Kennwort um sich mit dem Firmennetz zu verbinden lautet: FirmenNetz.
+
+Dasdurch, dass das Netz bereits aufgebaut wurde und eingerichtet ist müssen keine speziellen Einrichtungen vorgenommen werden. Damit Sie die Netze verwenden können muss sich das WLAN fähige Gerät in dem jeweiligen Bereich des AccesPoints befinden. Sobald dies der Fall ist muss eine neue WLAN-Verbindung eingerichtet werden. 
+
+Die Namen der jeweiligen Netze wird dann angezeigt und durch das Verbinden und eingeben, des oben genannten Kennworts für das jeweilige Netz, wird die Verbidnung mit dem Netzwerk erstellt. Das Netzwerk für die Firmengeräte besitzt die SSID Firma und das Netz für die Kunden besitzt die SSID Kunden.
 
 ### Netzwerk Einrichtung und IP-Zuweisung
 
-192.168.4.128 / 25
+Die vom Messeveranstalter vergebene IP-Adresse, die im vorherigen Kapitel bereits erwähnt wurde musste von uns aufgeteilt werden in zwei Subnetze, um die zwei Netzwerke erstellen zu können.
 
-1111 1111.1111 1111.1111 1111.1000 0000
+Die Subnetze wurden aufgetielt so dass die Anforderungen der Geräte die sich in den jeweiligen Netzen befinden sollen erfüllt wird. Die Netze wurden so aufgetielt, dass in beide Netze jeweils 64 Geräte angeschlossen werden können, somit besteht auch genug Platz in beiden Netzen sollten in Zukunft mehr Geräte mit den Netzen verbunden werden.
+
+Die IP-Adresse der jeweiligen Netze lauten:
 
 Kunden Netz:192.168.4.128 / 26
 Firmen Netz: 192.168.4.192 /26
-
 Subnetzmaske 255.255.255.192
 
-### Routing
-
-## WLAN
-
-### Zugang und Sicherheit
-
-### Anbindung von Clients
-
-## Inbetriebnahme
+Die IP-Zuweisung erfolgt automatisch per DHCP. Das bedeutet sobald ein Gerät sich mit dem Netzwerk verbindet erhält dieses Gerät automatisch eine IP-Adresse in dem jeweiligen Netz.
 
 # Umsetzung Teilprojekt SAE
 
 ## Datenbank
 
-### Datenbankmodell z.B. Relationen-Modell
+### Datenbankmodelle
 
 #### Datenbankmodell
 
@@ -119,9 +128,13 @@ Produktgruppe (*ProduktgruppeId*,Name)
 ProduktgruppeKunde (*ProduktgruppeKundeId*,-ProduktgruppeId-,-KundeId-)
 User (*UserId*,Name,Passwort) 
 
-## Aufbau und Funktionsweise
+### Technische Dokumentation
 
-Die Datenbank wurde mithilfe des Entity Frameworks erstellt und umgesetzt.
+Für die Umsetzung der Datenbank wurde das vogegebene Entity Framework verwendet. Um die Datenbank aufzusetzen musste zunächst das Microsoft.EntityFrameworkCore.Sqlite Framework in NuGet installiert werden.
+
+Nachdem das Framework installiert wurde begann die Erstellung der Datenbank mithilfe der Model.cs Datei. Diese Datei dient zunächst dazu die Struktur der Datenbank darzustellen. Das bedeutet, dass in der Model.cs die jeweiligen 
+
+## Aufbau und Funktionsweise
 
 ### Architektur
 
