@@ -132,7 +132,8 @@ User (*UserId*,Name,Passwort)
 
 Für die Umsetzung der Datenbank wurde das vogegebene Entity Framework verwendet. Um die Datenbank aufzusetzen musste zunächst das Microsoft.EntityFrameworkCore.Sqlite Framework in NuGet installiert werden.
 
-Nachdem das Framework installiert wurde begann die Erstellung der Datenbank mithilfe der Model.cs Datei. Diese Datei dient zunächst dazu die Struktur der Datenbank darzustellen. Das bedeutet, dass in der Model.cs die jeweiligen 
+Nachdem das Framework installiert wurde begann die Erstellung der Datenbank mithilfe der Model.cs Datei. Diese Datei dient zunächst dazu die Struktur der Datenbank darzustellen. Das bedeutet, dass hier die Attribute definiert werden, sowie die Verbindung zueinander, wie es im Realtionen-Modell und im ER-Modell abgebildet ist. Die verschiedenen Entitys werden als Klassen dargestellt und die Attribute als Methoden.
+Bei den Attributen die zwingend ausgefüllt werden müssen wird hinter 
 
 ## Aufbau und Funktionsweise
 
