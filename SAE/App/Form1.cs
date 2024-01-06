@@ -1,4 +1,6 @@
 
+using Database;
+using MesseContextNamespace;
 using System.Text.RegularExpressions;
 
 namespace App {
@@ -75,6 +77,7 @@ namespace App {
             if (cbFirmenvertreter.Checked) {
                 firma = db.UpsertFirma(new Firma { Name = tbFirma.Text });
             }
+            // TODO: Standard Foto entfernen
             Kunde kunde = new Kunde {
                 Vorname = tbVorname.Text,
                 Nachname = tbName.Text,
@@ -82,7 +85,7 @@ namespace App {
                 Ort = tbOrt.Text,
                 Strasse = tbStrasse.Text,
                 Hausnummer = tbNr.Text,
-                Foto = FotoToBase64(pbWebcamOutput.Image),
+                Foto = "", // FotoToBase64(pbWebcamOutput.Image),
                 Firmenvertreter = cbFirmenvertreter.Checked
             };
             if (firma != null) {
@@ -135,7 +138,8 @@ namespace App {
                 tbPLZ.Text != "",
                 tbOrt.Text != "",
                 (cbFirmenvertreter.Checked && tbFirma.Text != "") || !cbFirmenvertreter.Checked,
-                pbWebcamOutput.Image != null,
+                // TODO: rausnehmen im Release
+                //pbWebcamOutput.Image != null,
             };
             bAusweisErstellen.Enabled = conditions.All(cond => cond);
         }

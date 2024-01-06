@@ -1,19 +1,21 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+
+using Database;
+using ApiContextNamespace;
 
 // Der Controller 'kundenKartenController' ist für die Verarbeitung von HTTP-Anforderungen im Kontext der Kundendaten-API zuständig.
 // Jede Methode auf dem Controller entspricht einer oder mehreren URIs.
 
 namespace MesseAPI.Controllers {
-    [Authorize] // Endpunkte schützen
+    //[Authorize] // Endpunkte schützen
     [Route("api/[controller]")]
     [ApiController]
     public class kundenKartenController : ControllerBase {
-        private readonly MesseContext _context;
+        private readonly ApiContext _context;
 
-        // Der Konstruktor des Controllers, der den Datenbankkontext 'MesseContext' als Abhängigkeit akzeptiert.
-        public kundenKartenController(MesseContext context) {
+        // Der Konstruktor des Controllers, der den Datenbankkontext 'ApiContext' als Abhängigkeit akzeptiert.
+        public kundenKartenController(ApiContext context) {
             _context = context;
         }
 
@@ -88,7 +90,7 @@ namespace MesseAPI.Controllers {
         public async Task<ActionResult<Kunde>> PostkundenKarte(Kunde kundenKarte) {
             // Wenn keine Kundendaten vorhanden sind, wird Problem mit einer Fehlermeldung zurückgegeben.
             if (_context.Kunden == null) {
-                return Problem("Entity set 'MesseContext.Kunden' is null.");
+                return Problem("Entity set 'ApiContext.Kunden' is null.");
             }
 
             // Die neuen Kundendaten werden hinzugefügt.

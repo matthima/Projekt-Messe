@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ApiContextNamespace;
+using MesseContextNamespace;
 
 namespace Database {
     internal class MainLaunch {
         public static void Main(string[] args) {
-            DisplayAll.Display();
+            BaseContext db = new ApiContext();
+            //TestDataScript.CreateTestData(db);
+            DisplayAll.Display(db);
         }
     }
 }

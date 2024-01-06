@@ -1,3 +1,4 @@
+using ApiContextNamespace;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -14,10 +15,10 @@ using System.Security.Cryptography;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
-builder.Services.AddDbContext<MesseContext>(opt =>
-    opt.UseInMemoryDatabase("messe.db"));
-//options.UseSqlite($"Data Source={DbPath}");
-// opt.UseSqlite("Data Source=messe.db"));
+builder.Services.AddDbContext<ApiContext>(opt => {
+    //opt.UseInMemoryDatabase("messe.db");
+    // opt.UseSqlite("Data Source=messe.db");
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
