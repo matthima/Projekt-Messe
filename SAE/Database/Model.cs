@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 public class MesseContext : DbContext {
     public DbSet<Kunde> Kunden { get; set; }
@@ -13,7 +14,12 @@ public class MesseContext : DbContext {
     public MesseContext() {
         var folder = Environment.SpecialFolder.LocalApplicationData;
         var path = Environment.GetFolderPath(folder);
-        DbPath = System.IO.Path.Join(path, "messe.db");
+        DbPath = Path.Join(path, "messe.db");
+        Console.WriteLine(DbPath);
+    }
+
+    public MesseContext(DbContextOptions opt) {
+
     }
 
     // The following configures EF to create a Sqlite database file in the
@@ -21,14 +27,24 @@ public class MesseContext : DbContext {
     protected override void OnConfiguring(DbContextOptionsBuilder options)
         => options.UseSqlite($"Data Source={DbPath}");
 
-    public Produktgruppe[] GetProduktgruppenByName() {
+    public Produktgruppe[] GetProduktgruppenOrderedByName() {
         return this.Produktgruppe.OrderBy(p => p.Name).ToArray();
+    }
+
+    public Produktgruppe GetProduktgruppeByName(string name) {
+        return this.Produktgruppe.Where(p => p.Name == name).First();
     }
 
     public Firma AddFirma(Firma firma) {
         this.Firmen.Add(firma);
         this.SaveChanges();
         return firma;
+    }
+
+    public ProduktgruppeKunde AddProduktgruppeKunde(ProduktgruppeKunde produktgruppeKunde) {
+        this.ProduktgruppeKunden.Add(produktgruppeKunde);
+        this.SaveChanges();
+        return produktgruppeKunde;
     }
 
     public Kunde AddKunde(Kunde kunde) {
@@ -74,7 +90,21 @@ public class MesseContext : DbContext {
         }
     }
 
-
+    public ProduktgruppeKunde? GetProduktgruppeKunde(ProduktgruppeKunde target) {
+        ProduktgruppeKunde[] produktgruppeKunde = this.ProduktgruppeKunden.Where(produktgruppeKunde =>
+            produktgruppeKunde.ProduktgruppeId == target.ProduktgruppeId &&
+            produktgruppeKunde.KundeId == target.KundeId
+        ).ToArray();
+        if (produktgruppeKunde.Length == 1) {
+            return produktgruppeKunde[0];
+        }
+        else if (produktgruppeKunde.Length > 1) {
+            throw new Exception("Multiple 'ProduktgruppeKunde' that represent the same relation found");
+        }
+        else {
+            return null;
+        }
+    }
 
     public Firma UpsertFirma(Firma newFirma) {
         Firma firma = GetFirma(newFirma);
@@ -90,6 +120,21 @@ public class MesseContext : DbContext {
             return this.AddKunde(newKunde);
         }
         return kunde;
+    }
+
+    public ProduktgruppeKunde[] UpsertRelationKundeProduktgruppe(Kunde kunde, Produktgruppe[] ausgewaehlteProduktgruppen) {
+        List<ProduktgruppeKunde> produktgruppeKunden = new List<ProduktgruppeKunde>();
+        foreach (Produktgruppe produktgruppe in ausgewaehlteProduktgruppen) {
+            ProduktgruppeKunde newProduktgruppeKunde = new ProduktgruppeKunde { KundeId = kunde.KundeId, ProduktgruppeId = produktgruppe.ProduktgruppeId };
+            ProduktgruppeKunde produktgruppeKunde = GetProduktgruppeKunde(newProduktgruppeKunde);
+            if (produktgruppe == null) {
+                produktgruppeKunden.Add(this.AddProduktgruppeKunde(newProduktgruppeKunde));
+            }
+            else {
+                produktgruppeKunden.Add(newProduktgruppeKunde);
+            }
+        }
+        return produktgruppeKunden.ToArray();
     }
 }
 

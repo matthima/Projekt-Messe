@@ -13,10 +13,32 @@ namespace App {
         private MesseContext db;
 
         private void Form1_Load(object sender, EventArgs e) {
-            string[] produktgruppen = db.GetProduktgruppenByName().Select(p => p.Name).ToArray();
-            cbProduktgruppen1.DataSource = produktgruppen;
-            cbProduktgruppen2.DataSource = produktgruppen;
-            cbProduktgruppen3.DataSource = produktgruppen;
+            string[] produktgruppen1 = db.GetProduktgruppenOrderedByName().Select(p => p.Name).ToArray();
+            if (produktgruppen1.Length == 0) {
+                produktgruppen1 = new string[] { "Datenbank nicht erreichbar, bitte wenden Sie sich an einen Kundenbetreuer" };
+            }
+            cbProduktgruppen1.DataSource = produktgruppen1;
+
+            string[] produktgruppen2 = db.GetProduktgruppenOrderedByName().Select(p => p.Name).ToArray();
+            if (produktgruppen2.Length == 0) {
+                produktgruppen2 = new string[] { "Datenbank nicht erreichbar, bitte wenden Sie sich an einen Kundenbetreuer" };
+            }
+            cbProduktgruppen2.DataSource = produktgruppen2;
+
+            string[] produktgruppen3 = db.GetProduktgruppenOrderedByName().Select(p => p.Name).ToArray();
+            if (produktgruppen3.Length == 0) {
+                produktgruppen3 = new string[] { "Datenbank nicht erreichbar, bitte wenden Sie sich an einen Kundenbetreuer" };
+            }
+            cbProduktgruppen3.DataSource = produktgruppen3;
+        }
+
+        private void tbPLZ_TextChanged(object sender, EventArgs e) {
+            tbPLZ.Text = Regex.Replace(tbPLZ.Text, @"[^\d]", "");
+            if (tbPLZ.Text.Length > 5) {
+                tbPLZ.Text = tbPLZ.Text.Substring(0, 5);
+            }
+            tbPLZ.SelectionStart = tbPLZ.Text.Length;
+            tbPLZ.SelectionLength = 0;
         }
 
         private void cbFirmenvertreter_CheckedChanged(object sender, EventArgs e) {
@@ -67,8 +89,17 @@ namespace App {
                 kunde.FirmaId = firma.FirmaId;
             }
             kunde = db.UpsertKunde(kunde);
-            // TODO: DisplayAusweis()
+
+            Produktgruppe[] ausgewaehlteProduktgruppen = GewaehlteProduktgruppenUmwandeln();
+            db.UpsertRelationKundeProduktgruppe(kunde, ausgewaehlteProduktgruppen);
+            MessageBox.Show("Ihr Kundenausweis wurde erfolreich erstellt");
             ResetForm();
+        }
+
+        private Produktgruppe[] GewaehlteProduktgruppenUmwandeln() {
+            string[] gewaehlteProduktgruppenStrings = new string[] { cbProduktgruppen1.Text, cbProduktgruppen2.Text, cbProduktgruppen3.Text };
+            Produktgruppe[] gewaehlteProduktgruppen = gewaehlteProduktgruppenStrings.Select(produktgruppe => db.GetProduktgruppeByName(produktgruppe)).ToArray();
+            return gewaehlteProduktgruppen;
         }
 
         private void ResetForm() {
@@ -87,14 +118,14 @@ namespace App {
             bWebcamStarten.Enabled = true;
         }
 
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e) {
+            webcamFeed.StopFeed();
+        }
+
         private string FotoToBase64(Image foto) {
             ImageConverter converter = new ImageConverter();
             byte[] fotoByteArray = (byte[])converter.ConvertTo(foto, typeof(byte[]));
             return Convert.ToBase64String(fotoByteArray);
-        }
-
-        private void Form1_FormClosed(object sender, FormClosedEventArgs e) {
-            webcamFeed.StopFeed();
         }
 
         private void CheckFinishConditions() {
@@ -104,22 +135,9 @@ namespace App {
                 tbPLZ.Text != "",
                 tbOrt.Text != "",
                 (cbFirmenvertreter.Checked && tbFirma.Text != "") || !cbFirmenvertreter.Checked,
-                //pbWebcamOutput.Image != null,
+                pbWebcamOutput.Image != null,
             };
             bAusweisErstellen.Enabled = conditions.All(cond => cond);
-        }
-
-        private void label2_Click(object sender, EventArgs e) {
-
-        }
-
-        private void tbPLZ_TextChanged(object sender, EventArgs e) {
-            tbPLZ.Text = Regex.Replace(tbPLZ.Text, @"[^\d]", "");
-            if (tbPLZ.Text.Length > 5) {
-                tbPLZ.Text = tbPLZ.Text.Substring(0, 5);
-            }
-            tbPLZ.SelectionStart = tbPLZ.Text.Length;
-            tbPLZ.SelectionLength = 0;
         }
     }
 }
