@@ -1,5 +1,5 @@
 ﻿namespace App {
-    partial class Form1 {
+    partial class GUI {
         /// <summary>
         ///  Required designer variable.
         /// </summary>
@@ -471,7 +471,7 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "Kundenausweis-Generator";
             // 
-            // Form1
+            // GUI
             // 
             this.AutoScaleDimensions = new SizeF(7F, 15F);
             this.AutoScaleMode = AutoScaleMode.Font;
@@ -482,10 +482,10 @@
             this.ImeMode = ImeMode.Off;
             this.MaximumSize = new Size(1200, 750);
             this.MinimumSize = new Size(1200, 750);
-            this.Name = "Form1";
+            this.Name = "GUI";
             this.Text = "Kundenausweis-Generator";
-            this.FormClosed += this.Form1_FormClosed;
-            this.Load += this.Form1_Load;
+            this.FormClosed += this.GUI_FormClosed;
+            this.Load += this.GUI_Load;
             this.tlpMainFrame.ResumeLayout(false);
             this.flpWebcamPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)this.pbWebcamOutput).EndInit();

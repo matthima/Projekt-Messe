@@ -4,8 +4,8 @@ using MesseContextNamespace;
 using System.Text.RegularExpressions;
 
 namespace App {
-    public partial class Form1 : Form {
-        public Form1() {
+    public partial class GUI : Form {
+        public GUI() {
             InitializeComponent();
             this.webcamFeed = new WebcamFeed(pbWebcamOutput);
             this.db = new MesseContext();
@@ -14,7 +14,7 @@ namespace App {
         private WebcamFeed webcamFeed;
         private MesseContext db;
 
-        private void Form1_Load(object sender, EventArgs e) {
+        private void GUI_Load(object sender, EventArgs e) {
             string[] produktgruppen1 = db.GetProduktgruppenOrderedByName().Select(p => p.Name).ToArray();
             if (produktgruppen1.Length == 0) {
                 produktgruppen1 = new string[] { "Datenbank nicht erreichbar, bitte wenden Sie sich an einen Kundenbetreuer" };
@@ -121,7 +121,7 @@ namespace App {
             bWebcamStarten.Enabled = true;
         }
 
-        private void Form1_FormClosed(object sender, FormClosedEventArgs e) {
+        private void GUI_FormClosed(object sender, FormClosedEventArgs e) {
             webcamFeed.StopFeed();
         }
 
@@ -138,7 +138,7 @@ namespace App {
                 tbPLZ.Text != "",
                 tbOrt.Text != "",
                 (cbFirmenvertreter.Checked && tbFirma.Text != "") || !cbFirmenvertreter.Checked,
-                // TODO: rausnehmen im Release
+                // TODO: wieder keinkommentieren im Release
                 //pbWebcamOutput.Image != null,
             };
             bAusweisErstellen.Enabled = conditions.All(cond => cond);

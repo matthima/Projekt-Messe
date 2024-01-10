@@ -5,7 +5,7 @@ namespace Database {
     internal class MainLaunch {
         public static void Main(string[] args) {
             BaseContext db = new ApiContext();
-            //TestDataScript.CreateTestData(db);
+            // TestDataScript.CreateTestData(db);
             DisplayAll.Display(db);
         }
     }

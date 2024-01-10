@@ -1,8 +1,11 @@
 ﻿using Database;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ApiContextNamespace {
     public class ApiContext : BaseContext {
+
+        [SetsRequiredMembers]
         public ApiContext() {
             var folder = Environment.SpecialFolder.LocalApplicationData;
             var path = Environment.GetFolderPath(folder);
@@ -11,6 +14,7 @@ namespace ApiContextNamespace {
             Database.EnsureCreated();
         }
 
+        [SetsRequiredMembers]
         public ApiContext(DbContextOptions options) : base(options) {
             var folder = Environment.SpecialFolder.LocalApplicationData;
             var path = Environment.GetFolderPath(folder);

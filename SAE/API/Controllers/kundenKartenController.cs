@@ -3,12 +3,13 @@ using Microsoft.EntityFrameworkCore;
 
 using Database;
 using ApiContextNamespace;
+using Microsoft.AspNetCore.Authorization;
 
 // Der Controller 'kundenKartenController' ist für die Verarbeitung von HTTP-Anforderungen im Kontext der Kundendaten-API zuständig.
 // Jede Methode auf dem Controller entspricht einer oder mehreren URIs.
 
 namespace MesseAPI.Controllers {
-    //[Authorize] // Endpunkte schützen
+    // [Authorize] // Endpunkte schützen
     [Route("api/[controller]")]
     [ApiController]
     public class kundenKartenController : ControllerBase {

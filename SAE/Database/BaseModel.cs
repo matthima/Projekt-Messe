@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Database {
-    public class BaseContext : DbContext {
+    public abstract class BaseContext : DbContext {
         public BaseContext() { }
         public BaseContext(DbContextOptions options) : base(options) {}
 
