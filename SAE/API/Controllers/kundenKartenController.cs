@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 // Jede Methode auf dem Controller entspricht einer oder mehreren URIs.
 
 namespace MesseAPI.Controllers {
-    // [Authorize] // Endpunkte schützen
+    //[Authorize] // Endpunkte schützen
     [Route("api/[controller]")]
     [ApiController]
     public class kundenKartenController : ControllerBase {
@@ -22,6 +22,7 @@ namespace MesseAPI.Controllers {
 
         // GET: api/kundenKarten
         // Diese Methode gibt alle Kundendaten zurück.
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Kunde>>> GetkundenKarte() {
             // Wenn keine Kundendaten vorhanden sind, wird NotFound zurückgegeben.
@@ -35,6 +36,7 @@ namespace MesseAPI.Controllers {
 
         // GET: api/kundenKarten/5
         // Diese Methode gibt die Kundendaten mit der angegebenen ID zurück.
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Kunde>> GetkundenKarte(int id) {
             // Wenn keine Kundendaten vorhanden sind, wird NotFound zurückgegeben.
@@ -56,6 +58,7 @@ namespace MesseAPI.Controllers {
 
         // PUT: api/kundenKarten/5
         // Diese Methode aktualisiert die Kundendaten mit der angegebenen ID.
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutkundenKarte(int id, Kunde kundenKarte) {
             // Wenn die ID in der Anfrage nicht mit der ID in den Kundendaten übereinstimmt, wird BadRequest zurückgegeben.
@@ -87,6 +90,7 @@ namespace MesseAPI.Controllers {
 
         // POST: api/kundenKarten
         // Diese Methode erstellt eine neue Kundendaten.
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<Kunde>> PostkundenKarte(Kunde kundenKarte) {
             // Wenn keine Kundendaten vorhanden sind, wird Problem mit einer Fehlermeldung zurückgegeben.
@@ -105,6 +109,7 @@ namespace MesseAPI.Controllers {
 
         // DELETE: api/kundenKarten/5
         // Diese Methode löscht die Kundendaten mit der angegebenen ID.
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletekundenKarte(int id) {
             // Wenn keine Kundendaten vorhanden sind, wird NotFound zurückgegeben.

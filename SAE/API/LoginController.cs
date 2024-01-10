@@ -26,7 +26,8 @@ public class LoginController : ControllerBase
     [HttpPost, Route("login")]
     public IActionResult Login(LoginDTO loginDTO)
     {
-    
+        try
+        {      
             // Prüfung eingegebene Benutzerdaten
             if (string.IsNullOrEmpty(loginDTO.UserName) || string.IsNullOrEmpty(loginDTO.Password))
                 return BadRequest("Benutzerdaten nicht eingegeben.");
@@ -48,10 +49,10 @@ public class LoginController : ControllerBase
 
                 // Erstellt ein JWT-Sicherheitstoken mit den angegebenen Parametern.
                 var jwtSecurityToken = new JwtSecurityToken(
-                    issuer: "ABCXYZ", // Aussteller des Tokens
-                    audience: "http://lcalhost:51398", // erwarteter Empfänger des Tokens
+                    issuer: "MesseAPI", // Aussteller des Tokens
+                    audience: "http://localhost:7190", // erwarteter Empfänger des Tokens
                     claims: new List<Claim>(), // Ansprüche, die reinkönnen
-                    expires: DateTime.Now.AddMinutes(10), // Ablaufzeit 
+                    expires: DateTime.Now.AddMinutes(1), // Ablaufzeit 
                     signingCredentials: signinCredentials // Anmeldeinformationen für die Token-Signatur
                 );
 
@@ -70,5 +71,14 @@ public class LoginController : ControllerBase
             
             return BadRequest("Benutzer nicht gefunden");
         }
+        }
+        catch
+        {
+
+
+
+            return Unauthorized();
+        }
+        
     }
 }
