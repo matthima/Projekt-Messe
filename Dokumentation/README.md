@@ -133,16 +133,21 @@ User (*UserId*,Name,Passwort)
 
 Für die Umsetzung der Datenbank wurde das vogegebene Entity Framework verwendet. Um die Datenbank aufzusetzen musste zunächst das Microsoft.EntityFrameworkCore.Sqlite Framework in NuGet installiert werden.
 
-Nachdem das Framework installiert wurde begann die Erstellung der Datenbank mithilfe der Model.cs Datei. Diese Datei dient zunächst dazu die Struktur der Datenbank darzustellen. Das bedeutet, dass hier die Attribute definiert werden, sowie die Verbindung zueinander, wie es im Realtionen-Modell und im ER-Modell abgebildet ist. Die verschiedenen Entitys werden als Klassen dargestellt und die Attribute als Methoden.
-Bei den Attributen die zwingend ausgefüllt werden müssen wird hinter dem public noch **required** hinzugefügt.
+Nachdem das Framework installiert wurde beginnt die Erstellung der Datenbank mithilfe der Tables.cs Datei. Diese Datei dient zunächst dazu die Struktur der Datenbank darzustellen. Das bedeutet, dass hier die Attribute definiert werden, sowie die Verbindungen zueinander, wie es im Realtionen-Modell und im ER-Modell abgebildet ist. Die verschiedenen Entitys werden als Klassen dargestellt und die Attribute als Methoden.
+Bei den Attributen die zwingend benötigt werden wird hinter dem public noch **required** hinzugefügt.
 
-Bevor es möglich ist Datensätze in der Datenbank einzufügen muss in der NuGet Konsole folgende drei Befehle ausgeführt werden um die Datenbank zu erstellen:
+Die Datenbank und ihre Struktur sind somit festgelget. Um zwischen der Offline Datenbank und der API Datenbank zu unterscheiden werden zwei getrennte Datenbanken erstellt. In der MesseModel.cs sowie in der APIModel.cs wird der Name der Datenbank festgelegt, sowie der Speicherort. Bevor allerdings Datensätze in der Datenbank gespeichert werden können muss diese erstmal erstellt werden. Dabei ist es wichtig zu erwähnen, dass die MesseModel.cs die Offline Datenbank darstellt und die APIModel.cs die Datenbnak für die API.
 
-Install-Package Microsoft.EntityFrameworkCore.Tools 
-Add-Migration InitialCreate 
-Update-Database
+Damit die Datenbank erstellt werden kann ist es notwendig folgende Befehle in der **Package Manager Console** auszuführen:
 
-Nachdem diese Befehle ausgeführt werden 
+Install-Package Microsoft.EntityFrameworkCore.Tools
+Add-Migration Messe -Context MesseContext -OutputDir Migrations/Messe
+Add-Migration API -Context APIContext -OutputDir Migrations/API
+Update-Database -Context MesseContext
+Update-Database -Context APIContext
+
+Der zweite und dritte Befehl ist dafür zuständig die Datenbank zu erstellen und in dem vorgegebenen Pfad abzuspeichern. Die letzten zwei Befehele bringen die Datenbank auf den neuesten Stand. Dadurch, dass zwei Datenbanken erstellt werden ist es notwendig die Befehele doppelt auszuführen allerdings mit anderen Namen, um auch beide Datenbanken zu erstellen. Sollte nur eine der beiden Datenbank gewünscht sein so wird nur der Befehel mit dem Namen der jeweiligen gewünschten Datenbank ausgeführt.
+
 
 ## Aufbau und Funktionsweise
 
