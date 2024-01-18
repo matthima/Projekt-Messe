@@ -1,5 +1,6 @@
 ﻿using MesseContextNamespace;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,6 +39,7 @@ namespace Database {
             db.Add(new User { Name = "Matthias", Passwort = "matt" });
             db.Add(new User { Name = "Heinrich", Passwort = "hein" });
             db.Add(new User { Name = "Kevin", Passwort = "kev" });
+            db.Add(new User { Name = "Serhan", Passwort = "ser" });
 
             Console.WriteLine("Creating Produktgruppen");
             db.Add(new Produktgruppe { ProduktgruppeId = 1, Name = "Laptop" });

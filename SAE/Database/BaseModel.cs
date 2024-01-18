@@ -37,10 +37,14 @@ namespace Database {
             this.SaveChanges();
             return firma;
         }
-        public ProduktgruppeKunde AddProduktgruppeKunde(ProduktgruppeKunde produktgruppeKunde) {
-            this.ProduktgruppeKunden.Add(produktgruppeKunde);
-            this.SaveChanges();
-            return produktgruppeKunde;
+        public ProduktgruppeKunde UpsertProduktgruppeKunde(ProduktgruppeKunde produktgruppeKunde) {
+            ProduktgruppeKunde pk = this.ProduktgruppeKunden.Where(pk => pk.KundeId == produktgruppeKunde.KundeId && pk.ProduktgruppeId == produktgruppeKunde.ProduktgruppeId).First();
+            if (pk == null) {
+                this.ProduktgruppeKunden.Add(produktgruppeKunde);
+                this.SaveChanges();
+                return produktgruppeKunde;
+            }
+            return pk;
         }
 
 
@@ -124,7 +128,7 @@ namespace Database {
                 ProduktgruppeKunde newProduktgruppeKunde = new ProduktgruppeKunde { KundeId = kunde.KundeId, ProduktgruppeId = produktgruppe.ProduktgruppeId };
                 ProduktgruppeKunde produktgruppeKunde = GetProduktgruppeKunde(newProduktgruppeKunde);
                 if (produktgruppeKunde == null) {
-                    produktgruppeKunden.Add(this.AddProduktgruppeKunde(newProduktgruppeKunde));
+                    produktgruppeKunden.Add(this.UpsertProduktgruppeKunde(newProduktgruppeKunde));
                 }
                 else {
                     produktgruppeKunden.Add(newProduktgruppeKunde);
