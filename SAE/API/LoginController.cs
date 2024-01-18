@@ -1,54 +1,49 @@
-﻿using ApiContextNamespace;
-using Microsoft.IdentityModel.Tokens;
-//using Microsoft.IdentityModel.Tokens;
+﻿//using Microsoft.IdentityModel.Tokens;
 using API.Controllers;
+using ApiContextNamespace;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 [Route("api/[controller]")]
 [ApiController]
-public class LoginController : ControllerBase
-{
+public class LoginController : ControllerBase {
     //JWT-Schlüssel zur Token-Erstellung
     private readonly byte[] _jwtKey;
-    private readonly ApiContext _context; 
+    private readonly ApiContext _context;
 
     //JWT-Schlüssel als Abhängigkeit aktzeptieren.
-    public LoginController(byte[] jwtKey, ApiContext context)
-    {
-        _jwtKey = jwtKey;
-        _context = context;
+    public LoginController(byte[] jwtKey, ApiContext context) {
+        this._jwtKey = jwtKey;
+        this._context = context;
 
     }
 
     // HTTP-POST-Endpunkt für die Benutzerauthentifizierung und Token-Erstellung.
     [HttpPost, Route("login")]
-    public IActionResult Login(LoginDTO loginDTO)
-    {
-        try
-        {      
+    public IActionResult Login(LoginDTO loginDTO) {
+        try {
             // Prüfung eingegebene Benutzerdaten
             if (string.IsNullOrEmpty(loginDTO.UserName) || string.IsNullOrEmpty(loginDTO.Password))
-                return BadRequest("Benutzerdaten nicht eingegeben.");
+                return this.BadRequest("Benutzerdaten nicht eingegeben.");
 
             // Überprüfung Benutzerdaten in der Datenbank
-            var user = _context.Users.FirstOrDefault(u => u.Name == loginDTO.UserName);
+            Database.User? user = this._context.Users.FirstOrDefault(u => u.Name == loginDTO.UserName);
 
-        if (user != null) // Benutzer verfügbar 
-        {
-
-            // Überprüfe Passwort
-            if (user.Passwort == loginDTO.Password)
+            if (user != null) // Benutzer verfügbar 
             {
-                // Erstellt einen geheimen Schlüssel für die Token-Signatur.
-                var secretKey = new SymmetricSecurityKey(_jwtKey);
 
-                // Erstellt Anmeldeinformationen für die Token-Signatur.
-                var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+                // Überprüfe Passwort
+                if (user.Passwort == loginDTO.Password) {
+                    // Erstellt einen geheimen Schlüssel für die Token-Signatur.
+                    SymmetricSecurityKey secretKey = new SymmetricSecurityKey(this._jwtKey);
 
-                // Erstellt ein JWT-Sicherheitstoken mit den angegebenen Parametern.
-                var jwtSecurityToken = new JwtSecurityToken(
+                    // Erstellt Anmeldeinformationen für die Token-Signatur.
+                    SigningCredentials signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+
+                    // Erstellt ein JWT-Sicherheitstoken mit den angegebenen Parametern.
+                    JwtSecurityToken jwtSecurityToken = new JwtSecurityToken(
                     issuer: "MesseAPI", // Aussteller des Tokens
                     audience: "http://localhost:7190", // erwarteter Empfänger des Tokens
                     claims: new List<Claim>(), // Ansprüche, die reinkönnen
@@ -56,29 +51,26 @@ public class LoginController : ControllerBase
                     signingCredentials: signinCredentials // Anmeldeinformationen für die Token-Signatur
                 );
 
-                // Gibt JWT-Token als OK-Antwort zurück
-                return Ok(new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken));
+                    // Gibt JWT-Token als OK-Antwort zurück
+                    return this.Ok(new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken));
 
+                }
+                else {
+
+                    return this.BadRequest("Falsches Passwort");
+                }
             }
-            else
-            {
-                
-                return BadRequest("Falsches Passwort");
+            else {
+
+                return this.BadRequest("Benutzer nicht gefunden");
             }
         }
-        else
-        {
-            
-            return BadRequest("Benutzer nicht gefunden");
-        }
-        }
-        catch
-        {
+        catch {
 
 
 
-            return Unauthorized();
+            return this.Unauthorized();
         }
-        
+
     }
 }

@@ -1,5 +1,4 @@
-﻿using ApiContextNamespace;
-using MesseContextNamespace;
+﻿using MesseContextNamespace;
 
 namespace Database {
     internal class MainLaunch {

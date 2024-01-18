@@ -1,11 +1,4 @@
-﻿using MesseContextNamespace;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Migrations.Operations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Database {
     internal class TestDataScript {
@@ -47,12 +40,12 @@ namespace Database {
             db.Add(new Produktgruppe { ProduktgruppeId = 3, Name = "Server" });
 
             Console.WriteLine("Creating Kunden");
-            db.Add(new Kunde { KundeId=1,  Vorname = "Delete", Nachname = "Me", Firmenvertreter = false, Foto = ":^)", Hausnummer = "E2FI4", Ort = "Stuttgart", PLZ = 0711, Strasse = "Obere" });
-            db.Add(new Kunde { KundeId=2, Vorname = "Me", Nachname = "Update", Firmenvertreter = true, FirmaId = 12, Foto = "<:", Hausnummer = "12", Ort = "Weil", PLZ = 123, Strasse = "Untere" });
-            db.Add(new Kunde { KundeId=3, Vorname = "Product", Nachname = "Owner", Firmenvertreter = false, Foto = "", Hausnummer = "", Ort = "", PLZ = 0, Strasse = "" });
+            db.Add(new Kunde { KundeId = 1, Vorname = "Delete", Nachname = "Me", Firmenvertreter = false, Foto = ":^)", Hausnummer = "E2FI4", Ort = "Stuttgart", PLZ = 0711, Strasse = "Obere" });
+            db.Add(new Kunde { KundeId = 2, Vorname = "Me", Nachname = "Update", Firmenvertreter = true, FirmaId = 12, Foto = "<:", Hausnummer = "12", Ort = "Weil", PLZ = 123, Strasse = "Untere" });
+            db.Add(new Kunde { KundeId = 3, Vorname = "Product", Nachname = "Owner", Firmenvertreter = false, Foto = "", Hausnummer = "", Ort = "", PLZ = 0, Strasse = "" });
 
             Console.WriteLine("Creating Firma");
-            db.Add(new Firma { FirmaId = 12, Name ="Firma XY"});
+            db.Add(new Firma { FirmaId = 12, Name = "Firma XY" });
 
             Console.WriteLine("Creating Produktgruppe-Kunde relations");
             db.Add(new ProduktgruppeKunde { KundeId = 2, ProduktgruppeId = 1 });

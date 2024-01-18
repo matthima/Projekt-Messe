@@ -1,8 +1,4 @@
-﻿using ApiContextNamespace;
-using MesseContextNamespace;
-using System.ComponentModel.DataAnnotations;
-
-namespace Database {
+﻿namespace Database {
     internal class DisplayAll {
         public static void Display(BaseContext db) {
             DisplayKunde(db);
