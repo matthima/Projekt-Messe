@@ -1,24 +1,32 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Database {
-    internal class TestDataScript {
-        public static void CreateTestData(BaseContext db) {
+namespace Database._Test
+{
+    internal class TestDataScript
+    {
+        public static void CreateTestData(BaseContext db)
+        {
             Console.WriteLine($"Database path: {db.DbPath}.");
 
             Console.WriteLine("Clearing all data");
-            foreach (User user in db.Users) {
+            foreach (User user in db.Users)
+            {
                 db.Users.Remove(user);
             }
-            foreach (Kunde kunde in db.Kunden) {
+            foreach (Kunde kunde in db.Kunden)
+            {
                 db.Kunden.Remove(kunde);
             }
-            foreach (Firma firma in db.Firmen) {
+            foreach (Firma firma in db.Firmen)
+            {
                 db.Firmen.Remove(firma);
             }
-            foreach (Produktgruppe produktgruppe in db.Produktgruppe) {
+            foreach (Produktgruppe produktgruppe in db.Produktgruppe)
+            {
                 db.Produktgruppe.Remove(produktgruppe);
             }
-            foreach (ProduktgruppeKunde produktgruppe in db.ProduktgruppeKunden) {
+            foreach (ProduktgruppeKunde produktgruppe in db.ProduktgruppeKunden)
+            {
                 db.ProduktgruppeKunden.Remove(produktgruppe);
             }
             db.Database.ExecuteSql($"DELETE FROM SQLITE_SEQUENCE WHERE NAME = 'Kunden'");
