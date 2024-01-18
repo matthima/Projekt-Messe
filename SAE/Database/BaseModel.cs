@@ -38,13 +38,13 @@ namespace Database {
             return firma;
         }
         public ProduktgruppeKunde UpsertProduktgruppeKunde(ProduktgruppeKunde produktgruppeKunde) {
-            ProduktgruppeKunde pk = this.ProduktgruppeKunden.Where(pk => pk.KundeId == produktgruppeKunde.KundeId && pk.ProduktgruppeId == produktgruppeKunde.ProduktgruppeId).First();
-            if (pk == null) {
+            ProduktgruppeKunde[] pk = this.ProduktgruppeKunden.Where(pk => pk.KundeId == produktgruppeKunde.KundeId && pk.ProduktgruppeId == produktgruppeKunde.ProduktgruppeId).ToArray();
+            if (pk.Length == 0) {
                 this.ProduktgruppeKunden.Add(produktgruppeKunde);
                 this.SaveChanges();
                 return produktgruppeKunde;
             }
-            return pk;
+            return pk[0];
         }
 
 

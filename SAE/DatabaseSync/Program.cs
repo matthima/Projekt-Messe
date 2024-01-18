@@ -31,6 +31,8 @@ namespace DatabaseSync {
             }
             ClearLocalStorage(local);
             FetchFromAPI(local, api);
+            local.SaveChanges();
+            api.SaveChanges();
         }
 
         private static void ClearLocalStorage(MesseContext local) {
@@ -52,6 +54,12 @@ namespace DatabaseSync {
         }
 
         private static void FetchFromAPI(MesseContext local, ApiContext api) {
+            foreach (User user in api.Users) {
+                local.Users.Add(user);
+            }
+            foreach (Produktgruppe produktgruppe in api.Produktgruppe) {
+                local.Produktgruppe.Add(produktgruppe);
+            }
         }
     }
 }
