@@ -12,4 +12,6 @@
 /SAE/Database/.vs
 /SAE/Database/bin
 /SAE/Database/obj
-/SAE/Database/Migration
+/SAE/Database/Migrations
+/Dokumentation/.$UML.drawio.bkp
+/SAE/DatabaseSync/obj

@@ -1,128 +1,142 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MesseAPI.Models;
 
-// Objekt zum Verarbeiten von HTTP Anforderungen
-//Jede Methode auf dem Controller entspricht einer oder mehreren URIs
+using Database;
+using ApiContextNamespace;
+using Microsoft.AspNetCore.Authorization;
 
+// Der Controller 'kundenKartenController' ist für die Verarbeitung von HTTP-Anforderungen im Kontext der Kundendaten-API zuständig.
+// Jede Methode auf dem Controller entspricht einer oder mehreren URIs.
 
-namespace MesseAPI.Controllers
-{
+namespace MesseAPI.Controllers {
+    //[Authorize] // Endpunkte schützen
     [Route("api/[controller]")]
     [ApiController]
-    public class kundenKartenController : ControllerBase
-    {
-        private readonly kundenContext _context;
+    public class kundenKartenController : ControllerBase {
+        private readonly ApiContext _context;
 
-        public kundenKartenController(kundenContext context)
-        {
+        // Der Konstruktor des Controllers, der den Datenbankkontext 'ApiContext' als Abhängigkeit akzeptiert.
+        public kundenKartenController(ApiContext context) {
             _context = context;
         }
 
         // GET: api/kundenKarten
+        // Diese Methode gibt alle Kundendaten zurück.
+        [Authorize]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<kundenKarte>>> GetkundenKarte()
-        {
-          if (_context.kundenKarte == null)
-          {
-              return NotFound();
-          }
-            return await _context.kundenKarte.ToListAsync();
-        }
-
-        // GET: api/kundenKarten/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<kundenKarte>> GetkundenKarte(int id)
-        {
-          if (_context.kundenKarte == null)
-          {
-              return NotFound();
-          }
-            var kundenKarte = await _context.kundenKarte.FindAsync(id);
-
-            if (kundenKarte == null)
-            {
+        public async Task<ActionResult<IEnumerable<Kunde>>> GetkundenKarte() {
+            // Wenn keine Kundendaten vorhanden sind, wird NotFound zurückgegeben.
+            if (_context.Kunden == null) {
                 return NotFound();
             }
 
+            // Andernfalls werden alle Kundendaten als Liste zurückgegeben.
+            return await _context.Kunden.ToListAsync();
+        }
+
+        // GET: api/kundenKarten/5
+        // Diese Methode gibt die Kundendaten mit der angegebenen ID zurück.
+        [Authorize]
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Kunde>> GetkundenKarte(int id) {
+            // Wenn keine Kundendaten vorhanden sind, wird NotFound zurückgegeben.
+            if (_context.Kunden == null) {
+                return NotFound();
+            }
+
+            // Andernfalls werden die Kundendaten mit der angegebenen ID zurückgegeben.
+            var kundenKarte = await _context.Kunden.FindAsync(id);
+
+            // Wenn keine Kundendaten mit der angegebenen ID gefunden werden, wird NotFound zurückgegeben.
+            if (kundenKarte == null) {
+                return NotFound();
+            }
+
+            // Andernfalls werden die Kundendaten zurückgegeben.
             return kundenKarte;
         }
 
         // PUT: api/kundenKarten/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // Diese Methode aktualisiert die Kundendaten mit der angegebenen ID.
+        [Authorize]
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutkundenKarte(int id, kundenKarte kundenKarte)
-        {
-            if (id != kundenKarte.Id)
-            {
+        public async Task<IActionResult> PutkundenKarte(int id, Kunde kundenKarte) {
+            // Wenn die ID in der Anfrage nicht mit der ID in den Kundendaten übereinstimmt, wird BadRequest zurückgegeben.
+            if (id != kundenKarte.KundeId) {
                 return BadRequest();
             }
 
+            // Der Zustand der Kundendaten wird auf "Geändert" gesetzt, um die Aktualisierung durchzuführen.
             _context.Entry(kundenKarte).State = EntityState.Modified;
 
-            try
-            {
+            try {
+                // Die Änderungen werden in der Datenbank gespeichert.
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!kundenKarteExists(id))
-                {
+            catch (DbUpdateConcurrencyException) {
+                // Falls ein gleichzeitiger Aktualisierungskonflikt auftritt und die Kundendaten nicht gefunden werden,
+                // wird NotFound zurückgegeben. Andernfalls wird eine Ausnahme ausgelöst.
+                if (!kundenKarteExists(id)) {
                     return NotFound();
                 }
-                else
-                {
+                else {
                     throw;
                 }
             }
 
+            // Wenn die Aktualisierung erfolgreich ist, wird NoContent zurückgegeben.
             return NoContent();
         }
 
         // POST: api/kundenKarten
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // Diese Methode erstellt eine neue Kundendaten.
+        [Authorize]
         [HttpPost]
-        public async Task<ActionResult<kundenKarte>> PostkundenKarte(kundenKarte kundenKarte)
-        {
-          if (_context.kundenKarte == null)
-          {
-              return Problem("Entity set 'kundenContext.kundenKarte'  is null.");
-          }
-            _context.kundenKarte.Add(kundenKarte);
+        public async Task<ActionResult<Kunde>> PostkundenKarte(Kunde kundenKarte) {
+            // Wenn keine Kundendaten vorhanden sind, wird Problem mit einer Fehlermeldung zurückgegeben.
+            if (_context.Kunden == null) {
+                return Problem("Entity set 'ApiContext.Kunden' is null.");
+            }
+
+            // Die neuen Kundendaten werden hinzugefügt.
+            _context.Kunden.Add(kundenKarte);
+            // Die Änderungen werden in der Datenbank gespeichert.
             await _context.SaveChangesAsync();
 
-            //return CreatedAtAction("GetkundenKarte", new { id = kundenKarte.Id }, kundenKarte);
-            return CreatedAtAction(nameof(GetkundenKarte), new { id = kundenKarte.Id }, kundenKarte);
+            // Es wird CreatedAtAction zurückgegeben, um die neu erstellten Kundendaten anzuzeigen.
+            return CreatedAtAction(nameof(GetkundenKarte), new { id = kundenKarte.KundeId }, kundenKarte);
         }
 
         // DELETE: api/kundenKarten/5
+        // Diese Methode löscht die Kundendaten mit der angegebenen ID.
+        [Authorize]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletekundenKarte(int id)
-        {
-            if (_context.kundenKarte == null)
-            {
-                return NotFound();
-            }
-            var kundenKarte = await _context.kundenKarte.FindAsync(id);
-            if (kundenKarte == null)
-            {
+        public async Task<IActionResult> DeletekundenKarte(int id) {
+            // Wenn keine Kundendaten vorhanden sind, wird NotFound zurückgegeben.
+            if (_context.Kunden == null) {
                 return NotFound();
             }
 
-            _context.kundenKarte.Remove(kundenKarte);
+            // Die Kundendaten mit der angegebenen ID werden gesucht.
+            var kundenKarte = await _context.Kunden.FindAsync(id);
+
+            // Wenn keine Kundendaten mit der angegebenen ID gefunden werden, wird NotFound zurückgegeben.
+            if (kundenKarte == null) {
+                return NotFound();
+            }
+
+            // Die Kundendaten werden aus der Datenbank entfernt.
+            _context.Kunden.Remove(kundenKarte);
+            // Die Änderungen werden in der Datenbank gespeichert.
             await _context.SaveChangesAsync();
 
+            // Wenn die Löschung erfolgreich ist, wird NoContent zurückgegeben.
             return NoContent();
         }
 
-        private bool kundenKarteExists(int id)
-        {
-            return (_context.kundenKarte?.Any(e => e.Id == id)).GetValueOrDefault();
+        // Private Hilfsmethode zur Überprüfung, ob Kundendaten mit der angegebenen ID vorhanden sind.
+        private bool kundenKarteExists(int id) {
+            return (_context.Kunden?.Any(e => e.KundeId == id)).GetValueOrDefault();
         }
     }
 }
