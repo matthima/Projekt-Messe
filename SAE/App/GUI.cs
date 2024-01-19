@@ -77,7 +77,6 @@ namespace App {
             if (this.cbFirmenvertreter.Checked) {
                 firma = this.db.UpsertFirma(new Firma { Name = this.tbFirma.Text });
             }
-            // TODO: Standard Foto entfernen
             Kunde kunde = new Kunde {
                 Vorname = this.tbVorname.Text,
                 Nachname = this.tbName.Text,
@@ -85,7 +84,7 @@ namespace App {
                 Ort = this.tbOrt.Text,
                 Strasse = this.tbStrasse.Text,
                 Hausnummer = this.tbNr.Text,
-                Foto = "", // FotoToBase64(pbWebcamOutput.Image),
+                Foto = FotoToBase64(pbWebcamOutput.Image),
                 Firmenvertreter = this.cbFirmenvertreter.Checked
             };
             if (firma != null) {
@@ -138,8 +137,7 @@ namespace App {
                 this.tbPLZ.Text != "",
                 this.tbOrt.Text != "",
                 (this.cbFirmenvertreter.Checked && this.tbFirma.Text != "") || !this.cbFirmenvertreter.Checked,
-                // TODO: wieder keinkommentieren im Release
-                //pbWebcamOutput.Image != null,
+                pbWebcamOutput.Image != null,
             };
             this.bAusweisErstellen.Enabled = conditions.All(cond => cond);
         }

@@ -27,7 +27,6 @@
         5. [Technische Beschreibung der WebCam Anbindung](#technische-beschreibung-der-webcam-anbindung)
         6. [Anleitung Bedienung Kunde](#anleitung-bedienung-durch-den-kunden)
         7. [Anleitung Datenabruf und Übermittlung](#anleitung-datenabruf-und-übermittlung)
-        8. [Testszenarien](#testszenarien)
 
 # Einführung
 
@@ -207,3 +206,7 @@ Das Programm ist darauf konzepiert, kontinuerlich verwendbar zu sein, indem die 
 So muss es nur initial gestartet werden und kann von beliebig vielen Kunden verwendet werden.
 
 ### Anleitung Datenabruf und Übermittlung
+
+Der Datenabruf und die -übermittlung erfolgen jeweils durch die API und dem Übertragungsskript im Modul **DatabaseSync**. Die technische Dokumentation der API liegt in der Datei [TODO: DATEINAME VON KEVIN] bei.
+Das Übertragungsskript vergleicht den Stand beider Datenbanken, und führt auf die "variablen" Daten (Kunden, Firmen, ausgewählte Produktgruppen) einen sogenannten "Upsert" (Update/Insert) aus; es werden also nur Daten in die Firmendatenbank eingefügt, die nicht bereits existieren. Schließlich wird der lokale Speicher geleert.
+Zuletzt überträgt die Firmendatenbank die definierten Produktgruppen wieder an den auf deer Messe stehenden lokalen Speicher.

@@ -48,9 +48,6 @@ namespace DatabaseSync {
         }
 
         private static void FetchFromAPI(MesseContext local, ApiContext api) {
-            foreach (User user in api.Users) {
-                local.Users.Add(user);
-            }
             foreach (Produktgruppe produktgruppe in api.Produktgruppe) {
                 local.Produktgruppe.Add(produktgruppe);
             }
