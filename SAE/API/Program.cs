@@ -1,7 +1,6 @@
 ﻿
 using ApiContextNamespace;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
@@ -20,17 +19,15 @@ namespace API {
             // Hierzu gehören Controller, ein DbContext für Kundendaten (In-Memory-Datenbank), API Explorer und Swagger.
 
 
-            var builder = WebApplication.CreateBuilder(args);
+            WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
             builder.Services.AddControllers();
             builder.Services.AddDbContext<ApiContext>(opt => { });
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddSwaggerGen(option =>
-            {
+            builder.Services.AddSwaggerGen(option => {
                 option.SwaggerDoc("v1", new OpenApiInfo { Title = "Authenticate API", Version = "v1" });
-                option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-                {
+                option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme {
                     In = ParameterLocation.Header,
                     Description = "Please enter a valid token",
                     Name = "Authorization",
@@ -57,7 +54,7 @@ namespace API {
 
 
             // Füge die JWT-Authentifizierung hinzu
-            var key = GenerateRandomKey(32); // Generierter Authentifizierungskey
+            byte[] key = GenerateRandomKey(32); // Generierter Authentifizierungskey
 
             builder.Services.AddSingleton(key);
 
@@ -68,7 +65,7 @@ namespace API {
 
 
             // Die Webanwendung wird erstellt.
-            var app = builder.Build();
+            WebApplication app = builder.Build();
 
             // Im Entwicklungsmodus wird Swagger für die API-Dokumentation aktiviert.
             if (app.Environment.IsDevelopment()) {
@@ -106,7 +103,7 @@ namespace API {
             // Methode für die zufällige Generierung eines Schlüssels
             byte[] GenerateRandomKey(int length) {
                 byte[] randomBytes;
-                using (var rng = RandomNumberGenerator.Create()) {
+                using (RandomNumberGenerator rng = RandomNumberGenerator.Create()) {
                     randomBytes = new byte[length];
                     rng.GetBytes(randomBytes);
                 }

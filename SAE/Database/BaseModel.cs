@@ -1,14 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Database {
     public abstract class BaseContext : DbContext {
         public BaseContext() { }
-        public BaseContext(DbContextOptions options) : base(options) {}
+        public BaseContext(DbContextOptions options) : base(options) { }
 
         public DbSet<Kunde> Kunden { get; set; }
         public DbSet<Firma> Firmen { get; set; }
@@ -22,7 +17,7 @@ namespace Database {
         // The following configures EF to create a Sqlite database file in the
         // special "local" folder for your platform.
         protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseSqlite($"Data Source={DbPath}");
+            => options.UseSqlite($"Data Source={this.DbPath}");
 
         public Produktgruppe[] GetProduktgruppenOrderedByName() {
             return this.Produktgruppe.OrderBy(p => p.Name).ToArray();
@@ -38,13 +33,13 @@ namespace Database {
             return firma;
         }
         public ProduktgruppeKunde UpsertProduktgruppeKunde(ProduktgruppeKunde produktgruppeKunde) {
-            ProduktgruppeKunde pk = this.ProduktgruppeKunden.Where(pk => pk.KundeId == produktgruppeKunde.KundeId && pk.ProduktgruppeId == produktgruppeKunde.ProduktgruppeId).First();
-            if (pk == null) {
+            ProduktgruppeKunde[] pk = this.ProduktgruppeKunden.Where(pk => pk.KundeId == produktgruppeKunde.KundeId && pk.ProduktgruppeId == produktgruppeKunde.ProduktgruppeId).ToArray();
+            if (pk.Length == 0) {
                 this.ProduktgruppeKunden.Add(produktgruppeKunde);
                 this.SaveChanges();
                 return produktgruppeKunde;
             }
-            return pk;
+            return pk[0];
         }
 
 
@@ -108,7 +103,7 @@ namespace Database {
         }
 
         public Firma UpsertFirma(Firma newFirma) {
-            Firma firma = GetFirma(newFirma);
+            Firma firma = this.GetFirma(newFirma);
             if (firma == null) {
                 return this.AddFirma(newFirma);
             }
@@ -116,7 +111,7 @@ namespace Database {
         }
 
         public Kunde UpsertKunde(Kunde newKunde) {
-            Kunde kunde = GetKunde(newKunde);
+            Kunde kunde = this.GetKunde(newKunde);
             if (kunde == null) {
                 return this.AddKunde(newKunde);
             }
@@ -126,7 +121,7 @@ namespace Database {
             List<ProduktgruppeKunde> produktgruppeKunden = new List<ProduktgruppeKunde>();
             foreach (Produktgruppe produktgruppe in ausgewaehlteProduktgruppen) {
                 ProduktgruppeKunde newProduktgruppeKunde = new ProduktgruppeKunde { KundeId = kunde.KundeId, ProduktgruppeId = produktgruppe.ProduktgruppeId };
-                ProduktgruppeKunde produktgruppeKunde = GetProduktgruppeKunde(newProduktgruppeKunde);
+                ProduktgruppeKunde produktgruppeKunde = this.GetProduktgruppeKunde(newProduktgruppeKunde);
                 if (produktgruppeKunde == null) {
                     produktgruppeKunden.Add(this.UpsertProduktgruppeKunde(newProduktgruppeKunde));
                 }

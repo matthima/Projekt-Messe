@@ -1,6 +1,4 @@
 ﻿using Database;
-using Microsoft.EntityFrameworkCore;
-using System.Data;
 using System.Diagnostics.CodeAnalysis;
 
 namespace MesseContextNamespace {
@@ -8,10 +6,10 @@ namespace MesseContextNamespace {
 
         [SetsRequiredMembers]
         public MesseContext() {
-            var folder = Environment.SpecialFolder.LocalApplicationData;
-            var path = Environment.GetFolderPath(folder);
+            Environment.SpecialFolder folder = Environment.SpecialFolder.LocalApplicationData;
+            string path = Environment.GetFolderPath(folder);
             this.DbPath = Path.Join(path, "messe.db");
-            Console.WriteLine(DbPath);
+            Console.WriteLine(this.DbPath);
         }
     }
 }

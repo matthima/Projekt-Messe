@@ -1,12 +1,6 @@
 ﻿using ApiContextNamespace;
 using Database;
 using MesseContextNamespace;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DatabaseSync {
     internal class Program {
@@ -31,6 +25,8 @@ namespace DatabaseSync {
             }
             ClearLocalStorage(local);
             FetchFromAPI(local, api);
+            local.SaveChanges();
+            api.SaveChanges();
         }
 
         private static void ClearLocalStorage(MesseContext local) {
@@ -52,6 +48,9 @@ namespace DatabaseSync {
         }
 
         private static void FetchFromAPI(MesseContext local, ApiContext api) {
+            foreach (Produktgruppe produktgruppe in api.Produktgruppe) {
+                local.Produktgruppe.Add(produktgruppe);
+            }
         }
     }
 }

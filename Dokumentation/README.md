@@ -27,7 +27,6 @@
         5. [Technische Beschreibung der WebCam Anbindung](#technische-beschreibung-der-webcam-anbindung)
         6. [Anleitung Bedienung Kunde](#anleitung-bedienung-durch-den-kunden)
         7. [Anleitung Datenabruf und Übermittlung](#anleitung-datenabruf-und-übermittlung)
-        8. [Testszenarien](#testszenarien)
 
 # Einführung
 
@@ -113,11 +112,11 @@ Die IP-Zuweisung erfolgt automatisch per DHCP. Das bedeutet sobald ein Gerät si
 
 ## Datenbank
 
-### Datenbankmodelle
+### Modelle
 
-#### Datenbankmodell
+#### Entity-Relationship-Modell
 
-Siehe PDF namens ER-Modell
+Siehe PDF: ER-Modell.pdf
 
 #### Relationen-Modell
 
@@ -142,11 +141,15 @@ Die Datenbank und ihre Struktur sind somit festgelget. Um zwischen der Offline D
 
 Damit die Datenbank erstellt werden kann ist es notwendig folgende Befehle in der **Package Manager Console** auszuführen:
 
+```
 Install-Package Microsoft.EntityFrameworkCore.Tools
+
 Add-Migration Messe -Context MesseContext -OutputDir Migrations/Messe
 Add-Migration API -Context APIContext -OutputDir Migrations/API
+
 Update-Database -Context MesseContext
 Update-Database -Context APIContext
+```
 
 Der zweite und dritte Befehl ist dafür zuständig die Datenbank zu erstellen und in dem vorgegebenen Pfad abzuspeichern. Die letzten zwei Befehele bringen die Datenbank auf den neuesten Stand. Dadurch, dass zwei Datenbanken erstellt werden ist es notwendig die Befehele doppelt auszuführen allerdings mit anderen Namen, um auch beide Datenbanken zu erstellen. Sollte nur eine der beiden Datenbank gewünscht sein so wird nur der Befehel mit dem Namen der jeweiligen gewünschten Datenbank ausgeführt.
 
@@ -155,16 +158,57 @@ Der zweite und dritte Befehl ist dafür zuständig die Datenbank zu erstellen un
 
 ### Architektur
 
-### USE Case und UML Diagramme
+Das Programm besteht aus verschiedenen Modulen, die miteinander interagieren.
+
+Im **Database** Modul werden mit Hilfe des *Entity Framworks* der Aufbau und Zugriff auf die zwei Datenbanken (lokaler Speicher und API-Datenbank) definiert. Alle folgenden Module implementieren einen Datenbankzugriff und sind dementsprechend auf dieses Modul angewiesen.
+
+Das **App** Modul ist für die Benutzeroberfläche und das temporäre Speichern in der lokalen Datenbank verantwortlich. Zusätzlich wird eine Anbindung an die Webcam implementiert, um Kundenausweise mit Bildern auszustatten. Es ist die Schnittstelle zwischen dem Kunden und unserem Backend.
+
+Für firmeninterne Abfragen stellt das **API** Modul eine REST-API bereit. Um die Sicherheit der Kundendaten zu gewährleisten, efordern alle Abfragen einen eingeloggten, verifizierten Entwickleraccount.
+
+Aufgrund der unbeständigen Verbindung zwischen der Messe und unserem Firmenserver werden zuerst alle Daten auf einem lokalen Server gespeichert. Das **DatabaseSync** Modul implementiert ein Skript, welches versucht eine Verbindung aufzubauen und die Daten auf unseren Firmenserver zu übertragen.
+
+
+### Use-Case- und UML-Diagramme
+
+Siehe Dateien Use-Case.png und UML.png
 
 ### Prerequisites: Bibliotheken und Komponenten
 
+- Webcam
+    - AForge
+    - AForge.Video.DirectShow
+- Datenbank
+    - Microsoft.EntityFrameworkCore
+    - Microsoft.EntityFrameworkCore.InMemory
+    - Microsoft.EntityFrameworkCore.Sqlite
+    - Microsoft.EntityFrameworkCore.Tools
+- REST-API
+    - Swashbuckle.AspNetCore
+- Authentifizierung
+    - Microsoft.IdentityModel.Tokens
+    - Microsoft.AspNetCore.Authentication.JwtBearer
+
 ### Inbetriebnahme vor Ort
+
+Für Kunden sollen vier Notebooks ausgestellt werden, an denen Kundenausweise generiert werden können. Um Asynchronität zu vermeiden, wird die lokale Datenbank auf einem separaten Server gestartet. Dies vereinfacht ebenfalls den Sync zwischen lokalem Speicher und unserer Firmendatenbank.
+Zusätzlich soll immer ein Vertreter unserer Firma bereitstehen, um auf Kundenfragen zum Programm eingehen zu können, oder auftretende Probleme schnell zu lösen.
 
 ### Technische Beschreibung der WebCam-Anbindung
 
+Die Webcam-Anbindung **WebcamFeed** basiert auf der **VideoCaptureDevice** Klasse des **AForge**-Packages. 
+Um einen WebcamFeed zu starten, muss eine **PictureBox**, hier die entsprechende Fläche in der Benutzeroberfläche, als Ziel angegeben werden. 
+Mit Hilfe der von AForge bereitgestellten Methoden können wir den starten und stoppen.
+Ist der Feed gestartet, triggert jeder aufgezeichnete Frame den **FrameEventHandler**, welcher wiederum die **PictureBox** aktualisiert, um den Frame anzuzeigen.
+
 ### Anleitung Bedienung durch den Kunden
+
+Die Bedienung durch den Kunden beschränkt sich lediglich auf das Ausfüllen des Formulars in der Benutzeroberfläche.
+Das Programm ist darauf konzepiert, kontinuerlich verwendbar zu sein, indem die einzelnen Elemente des Formulars nach erfolgreicher Angabe zurückgesetzt werden. 
+So muss es nur initial gestartet werden und kann von beliebig vielen Kunden verwendet werden.
 
 ### Anleitung Datenabruf und Übermittlung
 
-### Testszenarien
+Der Datenabruf und die -übermittlung erfolgen jeweils durch die API und dem Übertragungsskript im Modul **DatabaseSync**. Die technische Dokumentation der API liegt in der Datei [TODO: DATEINAME VON KEVIN] bei.
+Das Übertragungsskript vergleicht den Stand beider Datenbanken, und führt auf die "variablen" Daten (Kunden, Firmen, ausgewählte Produktgruppen) einen sogenannten "Upsert" (Update/Insert) aus; es werden also nur Daten in die Firmendatenbank eingefügt, die nicht bereits existieren. Schließlich wird der lokale Speicher geleert.
+Zuletzt überträgt die Firmendatenbank die definierten Produktgruppen wieder an den auf deer Messe stehenden lokalen Speicher.

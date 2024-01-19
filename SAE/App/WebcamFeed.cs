@@ -11,12 +11,12 @@ namespace App {
         }
 
         public void Start() {
-            feedTarget.Image = null;
+            this.feedTarget.Image = null;
             FilterInfoCollection videoDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
             if (videoDevices.Count > 0) {
-                webcam = new VideoCaptureDevice(videoDevices[0].MonikerString);
-                webcam.NewFrame += new NewFrameEventHandler(FrameEventHandler);
-                webcam.Start();
+                this.webcam = new VideoCaptureDevice(videoDevices[0].MonikerString);
+                this.webcam.NewFrame += new NewFrameEventHandler(this.FrameEventHandler);
+                this.webcam.Start();
             }
             else {
                 MessageBox.Show("Keine Webcam verfügbar, bitte wenden Sie sich an unsere Kundenberatung");
@@ -24,12 +24,13 @@ namespace App {
         }
 
         public void FrameEventHandler(object sender, NewFrameEventArgs e) {
-            feedTarget.Image = (Bitmap)e.Frame.Clone();
+            this.feedTarget.Image = (Bitmap)e.Frame.Clone();
         }
 
         public void StopFeed() {
-            if (webcam != null) {
-                webcam.SignalToStop();
+            if (this.webcam != null) {
+                this.webcam.SignalToStop();
+                this.feedTarget.Image = null;
             }
         }
     }
