@@ -88,9 +88,11 @@ Der eine AccesPoint dient für den Zugang der Kundengeräte. Der jeweils andere 
 Das Kennwort um sich mit dem Kundennetz zu verbinden lautet: KundenNetz.
 Das Kennwort um sich mit dem Firmennetz zu verbinden lautet: FirmenNetz.
 
-Dasdurch, dass das Netz bereits aufgebaut wurde und eingerichtet ist müssen keine speziellen Einrichtungen vorgenommen werden. Damit Sie die Netze verwenden können muss sich das WLAN fähige Gerät in dem jeweiligen Bereich des AccesPoints befinden. Sobald dies der Fall ist muss eine neue WLAN-Verbindung eingerichtet werden. 
+Dadurch, dass das Netz bereits aufgebaut wurde und eingerichtet ist müssen keine speziellen Einrichtungen vorgenommen werden. Damit Sie die Netze verwenden können muss sich das WLAN fähige Gerät in dem jeweiligen Bereich des AccesPoints befinden. Sobald dies der Fall ist muss eine neue WLAN-Verbindung eingerichtet werden. 
 
 Die Namen der jeweiligen Netze wird dann angezeigt und durch das Verbinden und eingeben, des oben genannten Kennworts für das jeweilige Netz, wird die Verbidnung mit dem Netzwerk erstellt. Das Netzwerk für die Firmengeräte besitzt die SSID Firma und das Netz für die Kunden besitzt die SSID Kunden.
+
+Zusätzlich ist zu erwähnen, dass zusätzlich ein lokaler Datenbankserver vor Ort bei der Messe eingerichtet wird. Durch die Einrichtung dieses Servers ist es möglich die neu erfassten Daten bei den Laptops für die Kunden dort abzuspeichern. Um die Daten zum Server im Firmennetz hochzuladen wird die API genutzt. Dabei wird die lokale Datenbank von der Messe auf dem Firmennetzserver gespiegelt. 
 
 ### Netzwerk Einrichtung und IP-Zuweisung
 
