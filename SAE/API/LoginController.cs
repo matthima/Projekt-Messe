@@ -1,5 +1,4 @@
-﻿//using Microsoft.IdentityModel.Tokens;
-using API.Controllers;
+﻿using API.Controllers;
 using ApiContextNamespace;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -9,66 +8,58 @@ using System.Security.Claims;
 [Route("api/[controller]")]
 [ApiController]
 public class LoginController : ControllerBase {
-    //JWT-Schlüssel zur Token-Erstellung
+    // JWT-Authentication Key
     private readonly byte[] _jwtKey;
     private readonly ApiContext _context;
 
-    //JWT-Schlüssel als Abhängigkeit aktzeptieren.
     public LoginController(byte[] jwtKey, ApiContext context) {
         this._jwtKey = jwtKey;
         this._context = context;
 
     }
 
-    // HTTP-POST-Endpunkt für die Benutzerauthentifizierung und Token-Erstellung.
+    // HTTP-POST-Endpoint for authenticating users via login. Returns the User's Authentication-Token.
     [HttpPost, Route("login")]
     public IActionResult Login(LoginDTO loginDTO) {
         try {
-            // Prüfung eingegebene Benutzerdaten
+            // Force username + password to be required
             if (string.IsNullOrEmpty(loginDTO.UserName) || string.IsNullOrEmpty(loginDTO.Password))
                 return this.BadRequest("Benutzerdaten nicht eingegeben.");
 
-            // Überprüfung Benutzerdaten in der Datenbank
+            // Fetch user with given name
             Database.User? user = this._context.Users.FirstOrDefault(u => u.Name == loginDTO.UserName);
 
             if (user != null) // Benutzer verfügbar 
             {
-
-                // Überprüfe Passwort
                 if (user.Passwort == loginDTO.Password) {
-                    // Erstellt einen geheimen Schlüssel für die Token-Signatur.
+                    // create secret key, used in token-generation
                     SymmetricSecurityKey secretKey = new SymmetricSecurityKey(this._jwtKey);
 
-                    // Erstellt Anmeldeinformationen für die Token-Signatur.
+                    // create credentials, used in token-generation
                     SigningCredentials signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
 
-                    // Erstellt ein JWT-Sicherheitstoken mit den angegebenen Parametern.
+                    // create JWT-Auth-Token
                     JwtSecurityToken jwtSecurityToken = new JwtSecurityToken(
-                    issuer: "MesseAPI", // Aussteller des Tokens
-                    audience: "http://localhost:7190", // erwarteter Empfänger des Tokens
-                    claims: new List<Claim>(), // Ansprüche, die reinkönnen
-                    expires: DateTime.Now.AddMinutes(1), // Ablaufzeit 
-                    signingCredentials: signinCredentials // Anmeldeinformationen für die Token-Signatur
+                    issuer: "MesseAPI",
+                    audience: "http://localhost:7190", // defines where the token can be used
+                    claims: new List<Claim>(), // assertions that need to be true for the token to be valid (here: no special assertions)
+                    expires: DateTime.Now.AddMinutes(1), // token expires in n minutes
+                    signingCredentials: signinCredentials
                 );
 
-                    // Gibt JWT-Token als OK-Antwort zurück
+                    // returns the JWT-Token
                     return this.Ok(new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken));
 
                 }
                 else {
-
                     return this.BadRequest("Falsches Passwort");
                 }
             }
             else {
-
                 return this.BadRequest("Benutzer nicht gefunden");
             }
         }
         catch {
-
-
-
             return this.Unauthorized();
         }
 

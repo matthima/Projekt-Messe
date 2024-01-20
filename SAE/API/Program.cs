@@ -3,22 +3,13 @@ using ApiContextNamespace;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-
-//using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography;
 
 namespace API {
     public class Program {
         public static void Main(string[] args) {
-
-
-
-            // Der Code konfiguriert und erstellt eine ASP.NET Core-Webanwendung.
-
-            // Die benötigten Abhängigkeiten werden über den 'builder' konfiguriert.
-            // Hierzu gehören Controller, ein DbContext für Kundendaten (In-Memory-Datenbank), API Explorer und Swagger.
-
-
+            // Creates and configures ASP.NET Core WebApp
+            // Adds Controllers, DBContext and the Web-Interface via a WebApp builder
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
             builder.Services.AddControllers();
             builder.Services.AddDbContext<ApiContext>(opt => { });
@@ -35,26 +26,21 @@ namespace API {
                     BearerFormat = "JWT",
                     Scheme = "Bearer"
                 });
-                option.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type=ReferenceType.SecurityScheme,
-                    Id="Bearer"
-                }
-            },
-            new string[]{}
-        }
-    });
+                option.AddSecurityRequirement(new OpenApiSecurityRequirement { {
+                    new OpenApiSecurityScheme {
+                        Reference = new OpenApiReference {
+                            Type=ReferenceType.SecurityScheme,
+                            Id="Bearer"
+                        }
+                    },
+                    new string[]{}
+                }});
             });
 
 
 
-            // Füge die JWT-Authentifizierung hinzu
-            byte[] key = GenerateRandomKey(32); // Generierter Authentifizierungskey
+            // Add JWT-Authentication to WebApp
+            byte[] key = GenerateRandomKey(32);
 
             builder.Services.AddSingleton(key);
 
@@ -64,28 +50,24 @@ namespace API {
 
 
 
-            // Die Webanwendung wird erstellt.
+            // Build WebApp
             WebApplication app = builder.Build();
 
-            // Im Entwicklungsmodus wird Swagger für die API-Dokumentation aktiviert.
+            // displays Swagger UI when in dev mode
             if (app.Environment.IsDevelopment()) {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
 
-
-            // Füge die Authentifizierungsmiddleware hinzu
+            // add needed configurations
             app.UseAuthentication();
-
-            // Die Anwendung wird auf HTTPS-Redirection, Autorisierung, und das Mappen von Controllern konfiguriert.
-            app.UseHttpsRedirection();
             app.UseAuthorization();
+            app.UseHttpsRedirection();
             app.MapControllers();
 
-            // Die Anwendung wird gestartet.
             app.Run();
 
-            // JWT-Authentifizierungskonfiguration
+
             void ConfigureJwtAuthentication(IServiceCollection services, byte[] key) {
                 services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options => {
@@ -100,7 +82,7 @@ namespace API {
                     });
             }
 
-            // Methode für die zufällige Generierung eines Schlüssels
+            // Generate random JWT-Authentication key
             byte[] GenerateRandomKey(int length) {
                 byte[] randomBytes;
                 using (RandomNumberGenerator rng = RandomNumberGenerator.Create()) {

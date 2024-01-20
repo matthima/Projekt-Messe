@@ -1,7 +1,6 @@
 ﻿namespace API.Controllers {
-    //"Data Transfer Object". Ein DTO ist ein Objekt, das dazu dient, Daten zwischen Software-Anwendungen m
-    //it unterschiedlichen Schnittstellen zu übertragen. Es ist eine Klasse, die nur Datenfelder enthält, aber
-    //normalerweise keine geschäftlichen Logiken oder Methoden.
+    // A _Data Transfer Object_ is used to consistently transfer data between different pieces of software with differing interfaces
+    // It is represented as a class that exclusively contains fields; since it is only used for transferring data, no logic/methods are needed.
     public class LoginDTO {
         public string UserName { get; set; }
         public string Password { get; set; }
