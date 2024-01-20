@@ -12,6 +12,7 @@ namespace DatabaseSync {
         }
 
         private static void SyncDBs(MesseContext local, ApiContext api) {
+            // Upsert all data from the local DB to the company's DB
             foreach (Kunde kunde in local.Kunden) {
                 api.UpsertKunde(kunde);
             }
@@ -29,6 +30,7 @@ namespace DatabaseSync {
             api.SaveChanges();
         }
 
+        // Clears the local DB, keeping the auto-increment counters
         private static void ClearLocalStorage(MesseContext local) {
             foreach (User user in local.Users) {
                 local.Users.Remove(user);
@@ -47,6 +49,7 @@ namespace DatabaseSync {
             }
         }
 
+        // Syncs _Produktgruppe_n from company DB to local DB
         private static void FetchFromAPI(MesseContext local, ApiContext api) {
             foreach (Produktgruppe produktgruppe in api.Produktgruppe) {
                 local.Produktgruppe.Add(produktgruppe);

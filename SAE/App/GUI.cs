@@ -5,15 +5,17 @@ using System.Text.RegularExpressions;
 
 namespace App {
     public partial class GUI : Form {
+        private WebcamFeed webcamFeed;
+        private MesseContext db;
+
         public GUI() {
             this.InitializeComponent();
             this.webcamFeed = new WebcamFeed(this.pbWebcamOutput);
             this.db = new MesseContext();
         }
 
-        private WebcamFeed webcamFeed;
-        private MesseContext db;
 
+        // Fetches _Produktgruppe_n from local DB and populates the dropdowns in the GUI
         private void GUI_Load(object sender, EventArgs e) {
             string[] produktgruppen1 = this.db.GetProduktgruppenOrderedByName().Select(p => p.Name).ToArray();
             if (produktgruppen1.Length == 0) {
@@ -34,15 +36,17 @@ namespace App {
             this.cbProduktgruppen3.DataSource = produktgruppen3;
         }
 
+        // Restricts _tbPLZ_'s value to numbers and max length 5
         private void tbPLZ_TextChanged(object sender, EventArgs e) {
             this.tbPLZ.Text = Regex.Replace(this.tbPLZ.Text, @"[^\d]", "");
             if (this.tbPLZ.Text.Length > 5) {
-                this.tbPLZ.Text = this.tbPLZ.Text.Substring(0, 5);
+                this.tbPLZ.Text = this.tbPLZ.Text[..5];
             }
             this.tbPLZ.SelectionStart = this.tbPLZ.Text.Length;
             this.tbPLZ.SelectionLength = 0;
         }
 
+        // Shows/hides the elements needed for _Firmenvertreter_
         private void cbFirmenvertreter_CheckedChanged(object sender, EventArgs e) {
             bool check = this.cbFirmenvertreter.Checked;
             this.lbFirma.Visible = check;
@@ -50,6 +54,7 @@ namespace App {
             this.CheckFinishConditions();
         }
 
+        // Starts the _WebcamFeed_
         private void bWebcamStarten_Click(object sender, EventArgs e) {
             this.webcamFeed.Start();
             this.bBildAufnehmen.Visible = true;
@@ -57,6 +62,7 @@ namespace App {
             this.CheckFinishConditions();
         }
 
+        // Stops the feed and keeps the last frame in the preview
         private void bBildAufnehmen_Click(object sender, EventArgs e) {
             this.webcamFeed.StopFeed();
             this.bBildAufnehmen.Enabled = false;
@@ -65,6 +71,7 @@ namespace App {
             this.CheckFinishConditions();
         }
 
+        // Starts the _WebcamFeed_, allowing the user to retake their picture
         private void bNeuesBildAufnehmen_Click(object sender, EventArgs e) {
             this.webcamFeed.Start();
             this.bNeuesBildAufnehmen.Enabled = false;
@@ -72,6 +79,7 @@ namespace App {
             this.CheckFinishConditions();
         }
 
+        // Generates the DB objects based on the user's input and pushes them.
         private void bAusweisErstellen_Click(object sender, EventArgs e) {
             Firma? firma = null;
             if (this.cbFirmenvertreter.Checked) {
@@ -84,7 +92,7 @@ namespace App {
                 Ort = this.tbOrt.Text,
                 Strasse = this.tbStrasse.Text,
                 Hausnummer = this.tbNr.Text,
-                Foto = FotoToBase64(pbWebcamOutput.Image),
+                Foto = FotoToBase64(this.pbWebcamOutput.Image),
                 Firmenvertreter = this.cbFirmenvertreter.Checked
             };
             if (firma != null) {
@@ -94,10 +102,11 @@ namespace App {
 
             Produktgruppe[] ausgewaehlteProduktgruppen = this.GewaehlteProduktgruppenUmwandeln();
             this.db.UpsertRelationKundeProduktgruppe(kunde, ausgewaehlteProduktgruppen);
-            MessageBox.Show("Ihr Kundenausweis wurde erfolreich erstellt");
+            MessageBox.Show("Ihr Kundenausweis wurde erfolgreich erstellt");
             this.ResetForm();
         }
 
+        // Converts the string representations of _Produktgruppe_n to their corresponding object in the DB
         private Produktgruppe[] GewaehlteProduktgruppenUmwandeln() {
             string[] gewaehlteProduktgruppenStrings = new string[] { this.cbProduktgruppen1.Text, this.cbProduktgruppen2.Text, this.cbProduktgruppen3.Text };
             Produktgruppe[] gewaehlteProduktgruppen = gewaehlteProduktgruppenStrings.Select(produktgruppe => this.db.GetProduktgruppeByName(produktgruppe)).ToArray();
@@ -124,12 +133,14 @@ namespace App {
             this.webcamFeed.StopFeed();
         }
 
-        private string FotoToBase64(Image foto) {
+        // Converts the image to a base64 string, allowing it to be saved as a field in the DB
+        private static string FotoToBase64(Image foto) {
             ImageConverter converter = new ImageConverter();
             byte[] fotoByteArray = (byte[])converter.ConvertTo(foto, typeof(byte[]));
             return Convert.ToBase64String(fotoByteArray);
         }
 
+        // Checks if all conditions for finishing are completed and enables/disables the "finish" button
         private void CheckFinishConditions() {
             bool[] conditions = {
                 this.tbName.Text != "",
@@ -137,7 +148,7 @@ namespace App {
                 this.tbPLZ.Text != "",
                 this.tbOrt.Text != "",
                 (this.cbFirmenvertreter.Checked && this.tbFirma.Text != "") || !this.cbFirmenvertreter.Checked,
-                pbWebcamOutput.Image != null,
+                this.pbWebcamOutput.Image != null,
             };
             this.bAusweisErstellen.Enabled = conditions.All(cond => cond);
         }
