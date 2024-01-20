@@ -1,3 +1,4 @@
+
 # Inhalt
 
 1. [Einführung](#einführung)
@@ -26,7 +27,6 @@
         5. [Technische Beschreibung der WebCam Anbindung](#technische-beschreibung-der-webcam-anbindung)
         6. [Anleitung Bedienung Kunde](#anleitung-bedienung-durch-den-kunden)
         7. [Anleitung Datenabruf und Übermittlung](#anleitung-datenabruf-und-übermittlung)
-        8. [Testszenarien](#testszenarien)
 
 # Einführung
 
@@ -70,42 +70,145 @@ Informieren: WLAN Controller, RADIUS, AAA-Server
 
 ## Netzwerkinfrastruktur Stand
 
-### Netzwerkaufbau
+Auf der Messse existiert bereits ein vollständiges Netz. Dieses wird dabei in ein öffentliches und privates Netz aufgeteilt. Dadurch, dass das öffentliche Netz vermieden werden soll stellt der Veranstalter der Messe einen Internetfähigen Router zur Verfügung mit einer IP-Adresse in welcher Subnetze erstellt werden können. Die zur Verfügung gestellte IP-Adresse lautet wie folgt: 192.168.4.128/25.
 
-### Anbindung Messenetzwerk
+Mithilfe dieses Internetfähigen Routers und der IP-Adresse wird das Netzwerk aufgebaut auf der Messe die Kundeninformationen aufnehmen zu können und zu der Firma schicken zu können.
+
+### Netzwerkaufbau & Funktionsweise
+
+Der Aufbau des Netzes auf der Messe soll unterteilt werden in zwei verschiedene Netze. In einem dieser Netze sollen sich die Firmeneigenen Geräte befinden und in dem anderen Netz die Geräte für die Kunden.
+Dabei soll das Firmennetz platz für 16 Geräte besitzen und das Kundennetz für 4 Geräte. 
+
+Vorerst war von dem Kunden verlangt, dass diese beiden Netze getrennt voneinander arbeiten sollten, dass bedeutet, dass sie keine Verbidnung zueinadner haben und die Geräte von dem einen Netz nicht in das andere gelangen können. Nach Rücksprache mit dem Kunden wurde allerdings verinbart, dass diese Anforderung verfällt um Kosten zu sparen, denn um diese Anforderung erfüllen zu können müssten mehr Geräte, sowie Kabel eingekauft werden.
+
+Aufgrund der Einigung mit dem Kunden, dass die Netze nicht mehr streng von einander getrennt sein müssen wurde das Netzwerk wie folgt aufgebaut. An den von der Messe bereitgestellten Internetfähigen Router wurden von uns zwei AccessPoints angeschlossen. Es wurden AccessPoints gewählt, da diese die Verbindung mit den Geräten vor Ort erleichtern, dadurch, dass diese über WLAN beweltigt wird und keine weiteren Kabeln von nöten sind. 
+
+Der eine AccesPoint dient für den Zugang der Kundengeräte. Der jeweils andere für den Zugang der Firmengeräte. Beide AccessPoints sind durch das Protokoll WPA2-PSK gesichert und einem selbstgewähltem Kennwort.
+
+Das Kennwort um sich mit dem Kundennetz zu verbinden lautet: KundenNetz.
+Das Kennwort um sich mit dem Firmennetz zu verbinden lautet: FirmenNetz.
+
+Dadurch, dass das Netz bereits aufgebaut wurde und eingerichtet ist müssen keine speziellen Einrichtungen vorgenommen werden. Damit Sie die Netze verwenden können muss sich das WLAN fähige Gerät in dem jeweiligen Bereich des AccesPoints befinden. Sobald dies der Fall ist muss eine neue WLAN-Verbindung eingerichtet werden. 
+
+Die Namen der jeweiligen Netze wird dann angezeigt und durch das Verbinden und eingeben, des oben genannten Kennworts für das jeweilige Netz, wird die Verbidnung mit dem Netzwerk erstellt. Das Netzwerk für die Firmengeräte besitzt die SSID Firma und das Netz für die Kunden besitzt die SSID Kunden.
+
+Zusätzlich ist zu erwähnen, dass zusätzlich ein lokaler Datenbankserver vor Ort bei der Messe eingerichtet wird. Durch die Einrichtung dieses Servers ist es möglich die neu erfassten Daten bei den Laptops für die Kunden dort abzuspeichern. Um die Daten zum Server im Firmennetz hochzuladen wird die API genutzt. Dabei wird die lokale Datenbank von der Messe auf dem Firmennetzserver gespiegelt. 
 
 ### Netzwerk Einrichtung und IP-Zuweisung
 
-### Routing
+Die vom Messeveranstalter vergebene IP-Adresse, die im vorherigen Kapitel bereits erwähnt wurde musste von uns aufgeteilt werden in zwei Subnetze, um die zwei Netzwerke erstellen zu können.
 
-## WLAN
+Die Subnetze wurden aufgetielt so dass die Anforderungen der Geräte die sich in den jeweiligen Netzen befinden sollen erfüllt wird. Die Netze wurden so aufgetielt, dass in beide Netze jeweils 64 Geräte angeschlossen werden können, somit besteht auch genug Platz in beiden Netzen sollten in Zukunft mehr Geräte mit den Netzen verbunden werden.
 
-### Zugang und Sicherheit
+Die IP-Adresse der jeweiligen Netze lauten:
 
-### Anbindung von Clients
+Kunden Netz:192.168.4.128 / 26
+Firmen Netz: 192.168.4.192 /26
+Subnetzmaske 255.255.255.192
 
-## Inbetriebnahme
+Die IP-Zuweisung erfolgt automatisch per DHCP. Das bedeutet sobald ein Gerät sich mit dem Netzwerk verbindet erhält dieses Gerät automatisch eine IP-Adresse in dem jeweiligen Netz.
 
 # Umsetzung Teilprojekt SAE
 
 ## Datenbank
 
-### Datenbankmodell z.B. Relationen-Modell
+### Modelle
+
+#### Entity-Relationship-Modell
+
+Siehe PDF: ER-Modell.pdf
+
+#### Relationen-Modell
+
+Legende: 
+*name* -> Primary key
+-name- -> Foreign key
+
+Kunde (*KundenId*,Vorname,Nachname,PLZ,Ort,Straße,Hausnummer,Foto,Firmenvertreter,-FirmaId-)
+Firma (*FirmaId*,Name)
+Produktgruppe (*ProduktgruppeId*,Name)
+ProduktgruppeKunde (*ProduktgruppeKundeId*,-ProduktgruppeId-,-KundeId-)
+User (*UserId*,Name,Passwort) 
+
+### Technische Dokumentation
+
+Für die Umsetzung der Datenbank wurde das vogegebene Entity Framework verwendet. Um die Datenbank aufzusetzen musste zunächst das Microsoft.EntityFrameworkCore.Sqlite Framework in NuGet installiert werden.
+
+Nachdem das Framework installiert wurde beginnt die Erstellung der Datenbank mithilfe der Tables.cs Datei. Diese Datei dient zunächst dazu die Struktur der Datenbank darzustellen. Das bedeutet, dass hier die Attribute definiert werden, sowie die Verbindungen zueinander, wie es im Realtionen-Modell und im ER-Modell abgebildet ist. Die verschiedenen Entitys werden als Klassen dargestellt und die Attribute als Methoden.
+Bei den Attributen die zwingend benötigt werden wird hinter dem public noch **required** hinzugefügt.
+
+Die Datenbank und ihre Struktur sind somit festgelget. Um zwischen der Offline Datenbank und der API Datenbank zu unterscheiden werden zwei getrennte Datenbanken erstellt. In der MesseModel.cs sowie in der APIModel.cs wird der Name der Datenbank festgelegt, sowie der Speicherort. Bevor allerdings Datensätze in der Datenbank gespeichert werden können muss diese erstmal erstellt werden. Dabei ist es wichtig zu erwähnen, dass die MesseModel.cs die Offline Datenbank darstellt und die APIModel.cs die Datenbnak für die API.
+
+Damit die Datenbank erstellt werden kann ist es notwendig folgende Befehle in der **Package Manager Console** auszuführen:
+
+```
+Install-Package Microsoft.EntityFrameworkCore.Tools
+
+Add-Migration Messe -Context MesseContext -OutputDir Migrations/Messe
+Add-Migration API -Context APIContext -OutputDir Migrations/API
+
+Update-Database -Context MesseContext
+Update-Database -Context APIContext
+```
+
+Der zweite und dritte Befehl ist dafür zuständig die Datenbank zu erstellen und in dem vorgegebenen Pfad abzuspeichern. Die letzten zwei Befehele bringen die Datenbank auf den neuesten Stand. Dadurch, dass zwei Datenbanken erstellt werden ist es notwendig die Befehele doppelt auszuführen allerdings mit anderen Namen, um auch beide Datenbanken zu erstellen. Sollte nur eine der beiden Datenbank gewünscht sein so wird nur der Befehel mit dem Namen der jeweiligen gewünschten Datenbank ausgeführt.
+
 
 ## Aufbau und Funktionsweise
 
 ### Architektur
 
-### USE Case und UML Diagramme
+Das Programm besteht aus verschiedenen Modulen, die miteinander interagieren.
+
+Im **Database** Modul werden mit Hilfe des *Entity Framworks* der Aufbau und Zugriff auf die zwei Datenbanken (lokaler Speicher und API-Datenbank) definiert. Alle folgenden Module implementieren einen Datenbankzugriff und sind dementsprechend auf dieses Modul angewiesen.
+
+Das **App** Modul ist für die Benutzeroberfläche und das temporäre Speichern in der lokalen Datenbank verantwortlich. Zusätzlich wird eine Anbindung an die Webcam implementiert, um Kundenausweise mit Bildern auszustatten. Es ist die Schnittstelle zwischen dem Kunden und unserem Backend.
+
+Für firmeninterne Abfragen stellt das **API** Modul eine REST-API bereit. Um die Sicherheit der Kundendaten zu gewährleisten, efordern alle Abfragen einen eingeloggten, verifizierten Entwickleraccount.
+
+Aufgrund der unbeständigen Verbindung zwischen der Messe und unserem Firmenserver werden zuerst alle Daten auf einem lokalen Server gespeichert. Das **DatabaseSync** Modul implementiert ein Skript, welches versucht eine Verbindung aufzubauen und die Daten auf unseren Firmenserver zu übertragen.
+
+
+### Use-Case- und UML-Diagramme
+
+Siehe Dateien Use-Case.png und UML.png
 
 ### Prerequisites: Bibliotheken und Komponenten
 
+- Webcam
+    - AForge
+    - AForge.Video.DirectShow
+- Datenbank
+    - Microsoft.EntityFrameworkCore
+    - Microsoft.EntityFrameworkCore.InMemory
+    - Microsoft.EntityFrameworkCore.Sqlite
+    - Microsoft.EntityFrameworkCore.Tools
+- REST-API
+    - Swashbuckle.AspNetCore
+- Authentifizierung
+    - Microsoft.IdentityModel.Tokens
+    - Microsoft.AspNetCore.Authentication.JwtBearer
+
 ### Inbetriebnahme vor Ort
+
+Für Kunden sollen vier Notebooks ausgestellt werden, an denen Kundenausweise generiert werden können. Um Asynchronität zu vermeiden, wird die lokale Datenbank auf einem separaten Server gestartet. Dies vereinfacht ebenfalls den Sync zwischen lokalem Speicher und unserer Firmendatenbank.
+Zusätzlich soll immer ein Vertreter unserer Firma bereitstehen, um auf Kundenfragen zum Programm eingehen zu können, oder auftretende Probleme schnell zu lösen.
 
 ### Technische Beschreibung der WebCam-Anbindung
 
+Die Webcam-Anbindung **WebcamFeed** basiert auf der **VideoCaptureDevice** Klasse des **AForge**-Packages. 
+Um einen WebcamFeed zu starten, muss eine **PictureBox**, hier die entsprechende Fläche in der Benutzeroberfläche, als Ziel angegeben werden. 
+Mit Hilfe der von AForge bereitgestellten Methoden können wir den starten und stoppen.
+Ist der Feed gestartet, triggert jeder aufgezeichnete Frame den **FrameEventHandler**, welcher wiederum die **PictureBox** aktualisiert, um den Frame anzuzeigen.
+
 ### Anleitung Bedienung durch den Kunden
+
+Die Bedienung durch den Kunden beschränkt sich lediglich auf das Ausfüllen des Formulars in der Benutzeroberfläche.
+Das Programm ist darauf konzepiert, kontinuerlich verwendbar zu sein, indem die einzelnen Elemente des Formulars nach erfolgreicher Angabe zurückgesetzt werden. 
+So muss es nur initial gestartet werden und kann von beliebig vielen Kunden verwendet werden.
 
 ### Anleitung Datenabruf und Übermittlung
 
-### Testszenarien
+Der Datenabruf und die -übermittlung erfolgen jeweils durch die API und dem Übertragungsskript im Modul **DatabaseSync**. Die technische Dokumentation der API liegt in der Datei [TODO: DATEINAME VON KEVIN] bei.
+Das Übertragungsskript vergleicht den Stand beider Datenbanken, und führt auf die "variablen" Daten (Kunden, Firmen, ausgewählte Produktgruppen) einen sogenannten "Upsert" (Update/Insert) aus; es werden also nur Daten in die Firmendatenbank eingefügt, die nicht bereits existieren. Schließlich wird der lokale Speicher geleert.
+Zuletzt überträgt die Firmendatenbank die definierten Produktgruppen wieder an den auf deer Messe stehenden lokalen Speicher.

@@ -1,128 +1,125 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using ApiContextNamespace;
+using Database;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MesseAPI.Models;
 
-// Objekt zum Verarbeiten von HTTP Anforderungen
-//Jede Methode auf dem Controller entspricht einer oder mehreren URIs
-
-
-namespace MesseAPI.Controllers
-{
+// _kundenKartenController_ is responsible for handling HTTP-Requests for our customers' data
+namespace MesseAPI.Controllers {
     [Route("api/[controller]")]
     [ApiController]
-    public class kundenKartenController : ControllerBase
-    {
-        private readonly kundenContext _context;
+    public class kundenKartenController : ControllerBase {
+        private readonly ApiContext _context;
 
-        public kundenKartenController(kundenContext context)
-        {
-            _context = context;
+        public kundenKartenController(ApiContext context) {
+            this._context = context;
         }
 
         // GET: api/kundenKarten
+        // returns all _Kunde_n
+        [Authorize]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<kundenKarte>>> GetkundenKarte()
-        {
-          if (_context.kundenKarte == null)
-          {
-              return NotFound();
-          }
-            return await _context.kundenKarte.ToListAsync();
+        public async Task<ActionResult<IEnumerable<Kunde>>> GetkundenKarte() {
+            if (this._context.Kunden == null) {
+                return this.NotFound();
+            }
+            return this._context.Kunden.ToList();
         }
 
-        // GET: api/kundenKarten/5
+        // GET: api/kundenKarten/{id}
+        // returns the _Kunde_ with the specified id
+        [Authorize]
         [HttpGet("{id}")]
-        public async Task<ActionResult<kundenKarte>> GetkundenKarte(int id)
-        {
-          if (_context.kundenKarte == null)
-          {
-              return NotFound();
-          }
-            var kundenKarte = await _context.kundenKarte.FindAsync(id);
+        public async Task<ActionResult<Kunde>> GetkundenKarte(int id) {
+            if (this._context.Kunden == null) {
+                return this.NotFound();
+            }
 
-            if (kundenKarte == null)
-            {
-                return NotFound();
+            // Tries to fetch the _Kunde_ with the specified id
+            Kunde? kundenKarte = this._context.Kunden.Find(id);
+
+            // If no _Kunde_ with the specified id exists, return NotFound
+            if (kundenKarte == null) {
+                return this.NotFound();
             }
 
             return kundenKarte;
         }
 
-        // PUT: api/kundenKarten/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // PUT: api/kundenKarten/{id}
+        // updates the _Kunde_ with the specified id
+        [Authorize]
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutkundenKarte(int id, kundenKarte kundenKarte)
-        {
-            if (id != kundenKarte.Id)
-            {
-                return BadRequest();
+        public async Task<IActionResult> PutkundenKarte(int id, Kunde kundenKarte) {
+            // return BadRequest if the parameter id and id of _Kunde_ do not match
+            if (id != kundenKarte.KundeId) {
+                return this.BadRequest();
             }
 
-            _context.Entry(kundenKarte).State = EntityState.Modified;
+            // marks the _Kunde_ as modified, 
+            this._context.Entry(kundenKarte).State = EntityState.Modified;
 
-            try
-            {
-                await _context.SaveChangesAsync();
+            try {
+                // saves the modifications
+                this._context.SaveChanges();
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!kundenKarteExists(id))
-                {
-                    return NotFound();
+            catch (DbUpdateConcurrencyException) {
+                // if the save fails due to concurrent modifications, check if the _Kunde_ with the specified id still exists
+                if (!this.kundenKarteExists(id)) {
+                    return this.NotFound();
                 }
-                else
-                {
+                else {
                     throw;
                 }
             }
 
-            return NoContent();
+            // return NoContent on success
+            return this.NoContent();
         }
 
         // POST: api/kundenKarten
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // creates new _Kunde_
+        [Authorize]
         [HttpPost]
-        public async Task<ActionResult<kundenKarte>> PostkundenKarte(kundenKarte kundenKarte)
-        {
-          if (_context.kundenKarte == null)
-          {
-              return Problem("Entity set 'kundenContext.kundenKarte'  is null.");
-          }
-            _context.kundenKarte.Add(kundenKarte);
-            await _context.SaveChangesAsync();
+        public async Task<ActionResult<Kunde>> PostkundenKarte(Kunde kundenKarte) {
+            // Check if table exists
+            if (this._context.Kunden == null) {
+                return this.Problem("Entity set 'ApiContext.Kunden' is null.");
+            }
 
-            //return CreatedAtAction("GetkundenKarte", new { id = kundenKarte.Id }, kundenKarte);
-            return CreatedAtAction(nameof(GetkundenKarte), new { id = kundenKarte.Id }, kundenKarte);
+            this._context.Kunden.Add(kundenKarte);
+            this._context.SaveChanges();
+
+            // returns new _Kunde_ via CreatedAtAction
+            return this.CreatedAtAction(nameof(GetkundenKarte), new { id = kundenKarte.KundeId }, kundenKarte);
         }
 
-        // DELETE: api/kundenKarten/5
+        // DELETE: api/kundenKarten/{id}
+        // deletes the _Kunde_ with the specified id
+        [Authorize]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletekundenKarte(int id)
-        {
-            if (_context.kundenKarte == null)
-            {
-                return NotFound();
-            }
-            var kundenKarte = await _context.kundenKarte.FindAsync(id);
-            if (kundenKarte == null)
-            {
-                return NotFound();
+        public async Task<IActionResult> DeletekundenKarte(int id) {
+            // check if table exists
+            if (this._context.Kunden == null) {
+                return this.NotFound();
             }
 
-            _context.kundenKarte.Remove(kundenKarte);
-            await _context.SaveChangesAsync();
+            // tries to fetch the _Kunde_ with the specified id
+            Kunde? kundenKarte = this._context.Kunden.Find(id);
 
-            return NoContent();
+            if (kundenKarte == null) {
+                return this.NotFound();
+            }
+
+            this._context.Kunden.Remove(kundenKarte);
+            this._context.SaveChanges();
+
+            // return NoContent on success
+            return this.NoContent();
         }
 
-        private bool kundenKarteExists(int id)
-        {
-            return (_context.kundenKarte?.Any(e => e.Id == id)).GetValueOrDefault();
+        private bool kundenKarteExists(int id) {
+            return (this._context.Kunden?.Any(e => e.KundeId == id)).GetValueOrDefault();
         }
     }
 }
