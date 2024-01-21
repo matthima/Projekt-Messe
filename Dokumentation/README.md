@@ -47,6 +47,7 @@ Mithilfe dieses internetfähigen Routers und der IP-Adresse wird das Netzwerk au
 ### Netzwerkaufbau & Funktionsweise
 
 Der Aufbau des Netzes auf der Messe soll in zwei verschiedene Netze unterteilt werden. In einem dieser Netze sollen sich die firmeneigenen Geräte befinden und in dem anderen Netz die Geräte für die Kunden.
+
 Dabei soll das Firmennetz Platz für 16 Geräte besitzen und das Kundennetz für 4 Geräte. 
 
 Vorerst war von dem Kunden verlangt, dass diese beiden Netze getrennt voneinander arbeiten sollten. Das bedeutet, dass sie keine Verbindung zueinander haben und die Geräte von dem einen Netz nicht in das andere gelangen können. Nach Rücksprache mit dem Kunden wurde allerdings vereinbart, dass diese Anforderung verfällt, um Kosten zu sparen, denn um diese Anforderung erfüllen zu können, müssten mehr Geräte sowie Kabel eingekauft werden.
@@ -56,6 +57,7 @@ Aufgrund der Einigung mit dem Kunden, dass die Netze nicht mehr streng voneinand
 Der eine Accesspoint dient für den Zugang der Kundengeräte. Der jeweils andere für den Zugang der Firmengeräte. Beide Accesspoints sind durch das Protokoll WPA2-PSK gesichert und einem selbstgewählten Kennwort.
 
 Das Kennwort um sich mit dem Kundennetz zu verbinden lautet: KundenNetz.
+
 Das Kennwort um sich mit dem Firmennetz zu verbinden lautet: FirmenNetz.
 
 Dadurch, dass das Netz bereits aufgebaut wurde und eingerichtet ist, müssen keine speziellen Einrichtungen vorgenommen werden. Damit Sie die Netze verwenden können, muss sich das WLAN-fähige Gerät in dem jeweiligen Bereich des Accesspoints befinden. Sobald dies der Fall ist, muss eine neue WLAN-Verbindung eingerichtet werden. 
@@ -73,7 +75,9 @@ Die Subnetze wurden aufgeteilt, sodass die Anforderungen der Geräte, die sich i
 Die IP-Adressen der jeweiligen Netze lauten:
 
 KundenNetz: 192.168.4.128 / 26
+
 FirmenNetz: 192.168.4.192 /26
+
 Subnetzmaske 255.255.255.192
 
 Die IP-Zuweisung erfolgt automatisch per DHCP. Das bedeutet, sobald ein Gerät sich mit dem Netzwerk verbindet, erhält dieses Gerät automatisch eine IP-Adresse in dem jeweiligen Netz.
@@ -91,22 +95,27 @@ Siehe PDF: ER-Modell.pdf
 #### Relationen-Modell
 
 Legende: 
+
 *name* -> Primary key
+
 -name- -> Foreign key
 
 Kunde (*KundenId*,Vorname,Nachname,PLZ,Ort,Straße,Hausnummer,Foto,Firmenvertreter,-FirmaId-)
+
 Firma (*FirmaId*,Name)
+
 Produktgruppe (*ProduktgruppeId*,Name)
+
 ProduktgruppeKunde (*ProduktgruppeKundeId*,-ProduktgruppeId-,-KundeId-)
+
 User (*UserId*,Name,Passwort) 
-
-
 
 ### Technische Dokumentation
 
 Für die Umsetzung der Datenbank wurde das vorgegebene Entity Framework verwendet. Um die Datenbank aufzusetzen, musste zunächst das Microsoft.EntityFrameworkCore.Sqlite Framework in NuGet installiert werden.
 
 Nachdem das Framework installiert wurde, beginnt die Erstellung der Datenbank mithilfe der Tables.cs Datei. Diese Datei dient zunächst dazu, die Struktur der Datenbank darzustellen. Das bedeutet, dass hier die Attribute definiert werden, sowie die Verbindungen zueinander, wie es im Relationen-Modell und im ER-Modell abgebildet ist. Die verschiedenen Entitäten werden als Klassen dargestellt und die Attribute als Methoden.
+
 Bei den Attributen, die zwingend benötigt werden, wird hinter dem public noch **required** hinzugefügt.
 
 Die Datenbank und ihre Struktur sind somit festgelegt. Um zwischen der Offline-Datenbank und der API-Datenbank zu unterscheiden, werden zwei getrennte Datenbanken erstellt. In der MesseModel.cs sowie in der APIModel.cs wird der Name der Datenbank festgelegt, sowie der Speicherort. Bevor allerdings Datensätze in der Datenbank gespeichert werden können, muss diese erstmal erstellt werden. Dabei ist es wichtig zu erwähnen, dass die MesseModel.cs die Offline-Datenbank darstellt und die APIModel.cs die Datenbank für die API.
@@ -123,7 +132,9 @@ Update-Database -Context MesseContext
 Update-Database -Context APIContext
 ```
 
-Der zweite und dritte Befehl ist dafür zuständig, die Datenbank zu erstellen und in dem vorgegebenen Pfad abzuspeichern. Die letzten zwei Befehle bringen die Datenbank auf den neuesten Stand. Dadurch, dass zwei Datenbanken erstellt werden, ist es notwendig, die Befehle doppelt auszuführen, allerdings mit anderen Namen, um auch beide Datenbanken zu erstellen. Sollte nur eine der beiden Datenbanken gewünscht sein, so wird nur der Befehl mit dem Namen der jeweiligen gewünschten Datenbank ausgeführt.
+`Add-Migration` ist dafür zuständig, die Datenbank zu erstellen und in dem vorgegebenen Pfad abzuspeichern. 
+
+`Update-Database` bringt die Datenbank auf den neuesten Stand. Dadurch, dass zwei Datenbanken erstellt werden, ist es notwendig, die Befehle doppelt auszuführen, allerdings mit anderen Namen, um auch beide Datenbanken zu erstellen. Sollte nur eine der beiden Datenbanken gewünscht sein, so wird nur der Befehl mit dem Namen der jeweiligen gewünschten Datenbank ausgeführt.
 
 
 ## Aufbau und Funktionsweise
@@ -164,23 +175,31 @@ Siehe Dateien Use-Case.png und UML.png
 ### Inbetriebnahme vor Ort
 
 Für Kunden sollen vier Notebooks ausgestellt werden, an denen Kundenausweise generiert werden können. Um Asynchronität zu vermeiden, wird die lokale Datenbank auf einem separaten Server gestartet. Dies vereinfacht ebenfalls den Sync zwischen lokalem Speicher und unserer Firmendatenbank.
+
 Zusätzlich soll immer ein Vertreter unserer Firma bereitstehen, um auf Kundenfragen zum Programm eingehen zu können, oder auftretende Probleme schnell zu lösen.
 
 ### Technische Beschreibung der Webcam-Anbindung
 
 Die Webcam-Anbindung **WebcamFeed** basiert auf der **VideoCaptureDevice** Klasse des **AForge**-Packages. 
+
 Um einen WebcamFeed zu starten, muss eine **PictureBox**, hier die entsprechende Fläche in der Benutzeroberfläche, als Ziel angegeben werden. 
+
 Mit Hilfe der von AForge bereitgestellten Methoden können wir den starten und stoppen.
+
 Ist der Feed gestartet, triggert jeder aufgezeichnete Frame den **FrameEventHandler**, welcher wiederum die **PictureBox** aktualisiert, um den Frame anzuzeigen.
 
 ### Anleitung Bedienung durch den Kunden
 
 Die Bedienung durch den Kunden beschränkt sich lediglich auf das Ausfüllen des Formulars in der Benutzeroberfläche.
+
 Das Programm ist darauf konzipiert, kontinuierlich verwendbar zu sein, indem die einzelnen Elemente des Formulars nach erfolgreicher Angabe zurückgesetzt werden. 
+
 So muss es nur initial gestartet werden und kann von beliebig vielen Kunden verwendet werden.
 
 ### Anleitung Datenabruf und Übermittlung
 
 Der Datenabruf und die -übermittlung erfolgen jeweils durch die API und das Übertragungsskript im Modul **DatabaseSync**. Die Dokumentation der API liegt in der Datei **API-Doku.md** bei.
+
 Das Übertragungsskript vergleicht den Stand beider Datenbanken und führt auf die "variablen" Daten (Kunden, Firmen, ausgewählte Produktgruppen) einen sogenannten "Upsert" (Update/Insert) aus; es werden also nur Daten in die Firmendatenbank eingefügt, die nicht bereits existieren. Schließlich wird der lokale Speicher geleert.
+
 Zuletzt überträgt die Firmendatenbank die definierten Produktgruppen wieder an den auf der Messe stehenden lokalen Speicher.
