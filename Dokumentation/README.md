@@ -181,6 +181,6 @@ So muss es nur initial gestartet werden und kann von beliebig vielen Kunden verw
 
 ### Anleitung Datenabruf und Übermittlung
 
-Der Datenabruf und die -übermittlung erfolgen jeweils durch die API und das Übertragungsskript im Modul **DatabaseSync**. Die technische Dokumentation der API liegt in der Datei API-Doku.md bei.
+Der Datenabruf und die -übermittlung erfolgen jeweils durch die API und das Übertragungsskript im Modul **DatabaseSync**. Die Dokumentation der API liegt in der Datei **API-Doku.md** bei.
 Das Übertragungsskript vergleicht den Stand beider Datenbanken und führt auf die "variablen" Daten (Kunden, Firmen, ausgewählte Produktgruppen) einen sogenannten "Upsert" (Update/Insert) aus; es werden also nur Daten in die Firmendatenbank eingefügt, die nicht bereits existieren. Schließlich wird der lokale Speicher geleert.
 Zuletzt überträgt die Firmendatenbank die definierten Produktgruppen wieder an den auf der Messe stehenden lokalen Speicher.
