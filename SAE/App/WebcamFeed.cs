@@ -34,7 +34,6 @@ namespace App {
         public void StopFeed() {
             if (this.webcam != null) {
                 this.webcam.SignalToStop();
-                this.feedTarget.Image = null;
             }
         }
     }
