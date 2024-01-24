@@ -151,6 +151,16 @@ Für firmeninterne Abfragen stellt das **API**-Modul eine REST-API bereit. Um di
 
 Aufgrund der unbeständigen Verbindung zwischen der Messe und unserem Firmenserver werden zuerst alle Daten auf einem lokalen Server gespeichert. Das **DatabaseSync** Modul implementiert ein Skript, welches versucht eine Verbindung aufzubauen und die Daten auf unseren Firmenserver zu übertragen.
 
+#### Nutzung Design Patterns, Interfaces & Dependency Injection
+
+Um sicherzustellen, dass nur eine Instanz einer Datenbank erstellt wird, kommt das **Singleton** Pattern zum Einsatz. Bei der Registrierung eines Objekts als Singleton wird verhindert, dass mehrere Instanzen davon erzeugt werden können. Gleichzeitig wird bei jeder Anfrage auf das Objekt lediglich die bereits aktive Instanz verwendet. Leider war es uns in unserer Struktur nicht möglich, das Singleton Pattern zu verwenden, da der ApiContext-Konstruktor in der API zwingend erforderlich ist, um die API mit der Datenbank zu verbinden. Daher haben wir uns entschieden, in der Entwicklung darauf zu achten, dass keine weiteren Instanzen der Datenbank erstellt werden.
+
+Im MainLaunch der TestUtils erzeugen wir eine Datenbankinstanz, um die Datensätze auszugeben. Hierbei verwenden wir **Dependency Injection**, indem wir das Datenbankobjekt an die Funktionen "Display()" in der Klasse DisplayAll bzw. „CreateTestData()“ in der Klasse TestDataScript, übergeben. In diesen Funktionen wird das Objekt weiter verarbeitet, um die Datenbank abzufragen bzw. sie zu verändern.
+
+Im Startprogramm der API übergeben wir das **Interface** "IServiceCollection" der Funktion "ConfigureJwtAuthentication()" als Abhängigkeit, um die Konfiguration der JWT-Authentifizierung durchzuführen. Diese Funktion spielt eine zentrale Rolle bei der Integration von JWT-Authentifizierungsdiensten in unserer Anwendung.
+
+Das "IServiceCollection"-Interface ist ein wichtiges Element in ASP.NET Core, das dazu dient, Dienste innerhalb der Anwendungsinfrastruktur zu registrieren.
+
 
 ### Use-Case- und UML-Diagramme
 
