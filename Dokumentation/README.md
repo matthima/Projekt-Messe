@@ -12,7 +12,7 @@ Die Firma XYZ plant den Besuch einer Messe. Auf der Messe sollen neben den übli
 
 Während des Messeauftritts sollen von Kunden im Self-Service Kundenkarten erstellt werden können, mit denen dann der Zugang zu weiteren Messeangeboten möglich wird. Dabei sollen Nachname, Vorname, Anschrift und ein Bild erfasst werden. Zusätzlich sollen ein oder mehrere Produktgruppen angegeben werden können, für die besonderes Interesse besteht. Bei Firmenvertretern soll zusätzlich ein Datensatz für die Firma angelegt werden.
 
-Die Speicherung der Daten soll langfristig in einer Datenbank erfolgen. Da die Zuverlässigkeit der Netzwerkverbindung während des Messeauftritts nicht immer sichergestellt werden kann, muss das Erfassungssystem auch offline funktionieren und in der Lage sein, die Daten auf Wunsch an die Firmenzentrale zu übermitteln. Die Übermittlung soll mit Hilfe einer REST-API an den Firmenserver erfolgen. 
+Die Speicherung der Daten soll langfristig in einer Datenbank erfolgen. Da die Zuverlässigkeit der Netzwerkverbindung während des Messeauftritts nicht immer sichergestellt werden kann, muss das Erfassungssystem auch offline funktionieren und in der Lage sein, die Daten auf Wunsch an die Firmenzentrale zu übermitteln.
 
 Die gespeicherten Daten sollen von den MitarbeiterInnen auch abgerufen und durchsucht werden können. Da es sich um einen Self-Service handelt, muss sichergestellt werden, dass nicht jede Person das System frei nutzen kann. 
 
@@ -64,7 +64,7 @@ Dadurch, dass das Netz bereits aufgebaut wurde und eingerichtet ist, müssen kei
 
 Die Namen der jeweiligen Netze werden dann angezeigt und durch das Verbinden und Eingeben des oben genannten Kennworts für das jeweilige Netz wird die Verbindung mit dem Netzwerk erstellt. Das Netzwerk für die Firmengeräte besitzt die SSID Firma und das Netz für die Kunden besitzt die SSID Kunden.
 
-Zusätzlich ist zu erwähnen, dass zusätzlich ein lokaler Datenbankserver vor Ort bei der Messe eingerichtet wird. Durch die Einrichtung dieses Servers ist es möglich, die neu erfassten Daten bei den Laptops für die Kunden dort abzuspeichern. Um die Daten zum Server im Firmennetz hochzuladen, wird die API genutzt. Dabei wird die lokale Datenbank von der Messe auf dem Firmennetzserver gespiegelt. 
+Zusätzlich ist zu erwähnen, dass zusätzlich ein lokaler Datenbankserver vor Ort bei der Messe eingerichtet wird. Durch die Einrichtung dieses Servers ist es möglich, die neu erfassten Daten bei den Laptops für die Kunden dort abzuspeichern. Um die Daten zum Server im Firmennetz hochzuladen, wird die API genutzt. Dabei werden die Daten auf dem Server im Firmennetz hochgeladen und danach die hochgeladenen Daten von der Datenbank auf der Messe gelöscht.
 
 ### Netzwerkeinrichtung und IP-Zuweisung
 

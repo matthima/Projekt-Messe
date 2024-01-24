@@ -8,10 +8,10 @@ using Microsoft.EntityFrameworkCore;
 namespace MesseAPI.Controllers {
     [Route("api/[controller]")]
     [ApiController]
-    public class kundenKartenController : ControllerBase {
+    public class KundenKartenController : ControllerBase {
         private readonly ApiContext _context;
 
-        public kundenKartenController(ApiContext context) {
+        public KundenKartenController(ApiContext context) {
             this._context = context;
         }
 
