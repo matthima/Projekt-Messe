@@ -7,13 +7,12 @@ using System.Net.Http.Headers;
 using API.Controllers;
 using Microsoft.AspNetCore.Http;
 using System.Net.Http;
+using System.Runtime.Intrinsics.X86;
 
 namespace DatabaseSync {
-    internal class Program {
+    internal class DatabaseSync {
         public static void Main(string[] args) {
             MesseContext local = new MesseContext();
-            // ApiContext api = new ApiContext();
-
             SyncDBs(local);
         }
 
@@ -33,8 +32,19 @@ namespace DatabaseSync {
                 HttpResponseMessage response = client.PostAsync("kundenKarten", postJSON).GetAwaiter().GetResult();
                 string responseText = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
             }
+            foreach (Firma firma in local.Firmen) {
+                postJSON = new StringContent(JsonSerializer.Serialize(firma), Encoding.UTF8, "application/json");
+                HttpResponseMessage response = client.PostAsync("firma", postJSON).GetAwaiter().GetResult();
+                string responseText = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            }
+            foreach (ProduktgruppeKunde pk in local.ProduktgruppeKunden) {
+                postJSON = new StringContent(JsonSerializer.Serialize(pk), Encoding.UTF8, "application/json");
+                HttpResponseMessage response = client.PostAsync("ProduktgruppeKunde", postJSON).GetAwaiter().GetResult();
+                string responseText = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            }
             ClearLocalStorage(local);
-            FetchFromAPI(local);
+            FetchFromAPI(local, client);
+            local.SaveChanges();
         }
 
         // Clears the local DB, keeping the auto-increment counters
@@ -51,13 +61,23 @@ namespace DatabaseSync {
             foreach (ProduktgruppeKunde produktgruppe in local.ProduktgruppeKunden) {
                 local.ProduktgruppeKunden.Remove(produktgruppe);
             }
+            foreach (Firma firma in local.Firmen) {
+                local.Firmen.Remove(firma);
+            }
         }
 
         // Syncs _Produktgruppe_n from company DB to local DB
-        private static void FetchFromAPI(MesseContext local) {
-            //foreach (Produktgruppe produktgruppe in api.Produktgruppe) {
-            //    local.Produktgruppe.Add(produktgruppe);
-            //}
+        private static void FetchFromAPI(MesseContext local, HttpClient client) {
+            HttpResponseMessage response = client.GetAsync("Firma").GetAwaiter().GetResult();
+            List<Firma> firmen = JsonSerializer.Deserialize<List<Firma>>(response.Content.ReadAsStringAsync().GetAwaiter().GetResult());
+            foreach (Firma firma in firmen) {
+                local.Firmen.Add(firma);
+            }
+            response = client.GetAsync("Produktgruppe").GetAwaiter().GetResult();
+            Produktgruppe[] produktgruppen = JsonSerializer.Deserialize<Produktgruppe[]>(response.Content.ReadAsStringAsync().GetAwaiter().GetResult());
+            foreach (Produktgruppe produktgruppe in produktgruppen) {
+                local.Produktgruppe.Add(produktgruppe);
+            }
         }
     }
 }

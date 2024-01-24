@@ -17,7 +17,7 @@ namespace MesseAPI.Controllers
             _context = context;
         }
 
-        // GET: api/firma
+        // GET: api/Firma
         // returns all Firmen
         [Authorize]
         [HttpGet]
@@ -30,7 +30,7 @@ namespace MesseAPI.Controllers
             return this._context.Firmen.ToList();
         }
 
-        // POST: api/firmen
+        // POST: api/Firma
         // creates new firmen
         [Authorize]
         [HttpPost]

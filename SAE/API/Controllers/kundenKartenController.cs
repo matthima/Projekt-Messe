@@ -46,37 +46,6 @@ namespace MesseAPI.Controllers {
             return kundenKarte;
         }
 
-        // PUT: api/kundenKarten/{id}
-        // updates the _Kunde_ with the specified id
-        [Authorize]
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutkundenKarte(int id, Kunde kundenKarte) {
-            // return BadRequest if the parameter id and id of _Kunde_ do not match
-            if (id != kundenKarte.KundeId) {
-                return this.BadRequest();
-            }
-
-            // marks the _Kunde_ as modified, 
-            this._context.Entry(kundenKarte).State = EntityState.Modified;
-
-            try {
-                // saves the modifications
-                this._context.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException) {
-                // if the save fails due to concurrent modifications, check if the _Kunde_ with the specified id still exists
-                if (!this.kundenKarteExists(id)) {
-                    return this.NotFound();
-                }
-                else {
-                    throw;
-                }
-            }
-
-            // return NoContent on success
-            return this.NoContent();
-        }
-
         // POST: api/kundenKarten
         // creates new _Kunde_
         [Authorize]
