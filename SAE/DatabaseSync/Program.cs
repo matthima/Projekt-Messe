@@ -1,33 +1,40 @@
 ﻿using ApiContextNamespace;
 using Database;
 using MesseContextNamespace;
+using System.Text;
+using System.Text.Json;
+using System.Net.Http.Headers;
+using API.Controllers;
+using Microsoft.AspNetCore.Http;
+using System.Net.Http;
 
 namespace DatabaseSync {
     internal class Program {
         public static void Main(string[] args) {
             MesseContext local = new MesseContext();
-            ApiContext api = new ApiContext();
+            // ApiContext api = new ApiContext();
 
-            SyncDBs(local, api);
+            SyncDBs(local);
         }
 
-        private static void SyncDBs(MesseContext local, ApiContext api) {
-            // Upsert all data from the local DB to the company's DB
+        private static void SyncDBs(MesseContext local) {
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri("https://localhost:7190/api/");
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+
+            StringContent postJSON = new StringContent(JsonSerializer.Serialize(new LoginDTO { UserName="Heinrich", Password="hein"}), Encoding.UTF8, "application/json");
+            string authToken = client.PostAsync("Login/login", postJSON).GetAwaiter().GetResult().Content.ReadAsStringAsync().GetAwaiter().GetResult().Replace("\"", "");
+            Console.WriteLine(authToken);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
             foreach (Kunde kunde in local.Kunden) {
-                api.UpsertKunde(kunde);
-            }
-
-            foreach (Firma firma in local.Firmen) {
-                api.UpsertFirma(firma);
-            }
-
-            foreach (ProduktgruppeKunde pk in local.ProduktgruppeKunden) {
-                api.UpsertProduktgruppeKunde(pk);
+                postJSON = new StringContent(JsonSerializer.Serialize(kunde), Encoding.UTF8, "application/json");
+                HttpResponseMessage response = client.PostAsync("kundenKarten", postJSON).GetAwaiter().GetResult();
+                string responseText = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
             }
             ClearLocalStorage(local);
-            FetchFromAPI(local, api);
-            local.SaveChanges();
-            api.SaveChanges();
+            FetchFromAPI(local);
         }
 
         // Clears the local DB, keeping the auto-increment counters
@@ -38,9 +45,6 @@ namespace DatabaseSync {
             foreach (Kunde kunde in local.Kunden) {
                 local.Kunden.Remove(kunde);
             }
-            foreach (Firma firma in local.Firmen) {
-                local.Firmen.Remove(firma);
-            }
             foreach (Produktgruppe produktgruppe in local.Produktgruppe) {
                 local.Produktgruppe.Remove(produktgruppe);
             }
@@ -50,10 +54,10 @@ namespace DatabaseSync {
         }
 
         // Syncs _Produktgruppe_n from company DB to local DB
-        private static void FetchFromAPI(MesseContext local, ApiContext api) {
-            foreach (Produktgruppe produktgruppe in api.Produktgruppe) {
-                local.Produktgruppe.Add(produktgruppe);
-            }
+        private static void FetchFromAPI(MesseContext local) {
+            //foreach (Produktgruppe produktgruppe in api.Produktgruppe) {
+            //    local.Produktgruppe.Add(produktgruppe);
+            //}
         }
     }
 }

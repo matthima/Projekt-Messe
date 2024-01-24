@@ -34,6 +34,7 @@ namespace Database._Test {
             db.Add(new User { Name = "Heinrich", Passwort = "hein" });
             db.Add(new User { Name = "Kevin", Passwort = "kev" });
             db.Add(new User { Name = "Serhan", Passwort = "ser" });
+            db.Add(new User { Name = "admin", Passwort = "adminPassword" });
 
             Console.WriteLine("Creating Produktgruppen");
             db.Add(new Produktgruppe { ProduktgruppeId = 1, Name = "Laptop" });

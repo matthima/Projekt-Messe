@@ -81,7 +81,7 @@ namespace MesseAPI.Controllers {
         // creates new _Kunde_
         [Authorize]
         [HttpPost]
-        public async Task<ActionResult<Kunde>> PostkundenKarte(Kunde kundenKarte) {
+        public async Task<ActionResult<Kunde>> PostkundenKarte([FromBody] Kunde kundenKarte) {
             // Check if table exists
             if (this._context.Kunden == null) {
                 return this.Problem("Entity set 'ApiContext.Kunden' is null.");
