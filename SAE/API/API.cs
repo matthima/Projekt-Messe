@@ -11,7 +11,10 @@ namespace API {
             // Creates and configures ASP.NET Core WebApp
             // Adds Controllers, DBContext and the Web-Interface via a WebApp builder
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-            builder.Services.AddControllers();
+            builder.Services.AddControllers().AddJsonOptions(options => {
+                options.JsonSerializerOptions.PropertyNamingPolicy = null;
+            }
+            ); ;
             builder.Services.AddDbContext<ApiContext>(opt => { });
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();

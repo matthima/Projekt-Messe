@@ -8,10 +8,10 @@ using Microsoft.EntityFrameworkCore;
 namespace MesseAPI.Controllers {
     [Route("api/[controller]")]
     [ApiController]
-    public class kundenKartenController : ControllerBase {
+    public class KundenKartenController : ControllerBase {
         private readonly ApiContext _context;
 
-        public kundenKartenController(ApiContext context) {
+        public KundenKartenController(ApiContext context) {
             this._context = context;
         }
 
@@ -46,42 +46,11 @@ namespace MesseAPI.Controllers {
             return kundenKarte;
         }
 
-        // PUT: api/kundenKarten/{id}
-        // updates the _Kunde_ with the specified id
-        [Authorize]
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutkundenKarte(int id, Kunde kundenKarte) {
-            // return BadRequest if the parameter id and id of _Kunde_ do not match
-            if (id != kundenKarte.KundeId) {
-                return this.BadRequest();
-            }
-
-            // marks the _Kunde_ as modified, 
-            this._context.Entry(kundenKarte).State = EntityState.Modified;
-
-            try {
-                // saves the modifications
-                this._context.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException) {
-                // if the save fails due to concurrent modifications, check if the _Kunde_ with the specified id still exists
-                if (!this.kundenKarteExists(id)) {
-                    return this.NotFound();
-                }
-                else {
-                    throw;
-                }
-            }
-
-            // return NoContent on success
-            return this.NoContent();
-        }
-
         // POST: api/kundenKarten
         // creates new _Kunde_
         [Authorize]
         [HttpPost]
-        public async Task<ActionResult<Kunde>> PostkundenKarte(Kunde kundenKarte) {
+        public async Task<ActionResult<Kunde>> PostkundenKarte([FromBody] Kunde kundenKarte) {
             // Check if table exists
             if (this._context.Kunden == null) {
                 return this.Problem("Entity set 'ApiContext.Kunden' is null.");

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Database._Test {
+namespace Database._TestUtils {
     internal class TestDataScript {
         public static void CreateTestData(BaseContext db) {
             Console.WriteLine($"Database path: {db.DbPath}.");
