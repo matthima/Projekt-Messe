@@ -1,4 +1,4 @@
-﻿namespace Database._Test {
+﻿namespace Database._TestUtils {
     internal class DisplayAll {
         public static void Display(BaseContext db) {
             DisplayKunde(db);

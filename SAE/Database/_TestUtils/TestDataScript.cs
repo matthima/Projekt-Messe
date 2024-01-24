@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Database._Test {
+namespace Database._TestUtils {
     internal class TestDataScript {
         public static void CreateTestData(BaseContext db) {
             Console.WriteLine($"Database path: {db.DbPath}.");
@@ -34,7 +34,6 @@ namespace Database._Test {
             db.Add(new User { Name = "Heinrich", Passwort = "hein" });
             db.Add(new User { Name = "Kevin", Passwort = "kev" });
             db.Add(new User { Name = "Serhan", Passwort = "ser" });
-            db.Add(new User { Name = "admin", Passwort = "adminPassword" });
 
             Console.WriteLine("Creating Produktgruppen");
             db.Add(new Produktgruppe { ProduktgruppeId = 1, Name = "Laptop" });

@@ -1,11 +1,11 @@
 ﻿using ApiContextNamespace;
 using MesseContextNamespace;
 
-namespace Database._Test {
+namespace Database._TestUtils {
     internal class MainLaunch {
         public static void Main(string[] args) {
-            BaseContext db = new MesseContext();
-            // TestDataScript.CreateTestData(db);
+            BaseContext db = new ApiContext();
+            TestDataScript.CreateTestData(db);
             DisplayAll.Display(db);
         }
     }
