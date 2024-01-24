@@ -2,7 +2,7 @@
 
 
 ## kundenKarten-Controller
-Die kundenKarten-API ermöglich die Verwaltung der Kundendaten mit Hilfe von RESTful Endpunkten. 
+Die kundenKarten-API ermöglicht die Verwaltung der Kundendaten mit Hilfe von RESTful Endpunkten. 
 
 Im Folgenden werden die einzelnen Endpunkte dokumentiert.
 
@@ -117,7 +117,7 @@ Der Login-Controller ist verantwortlich für die Authentifizierung von Benutzern
 
 Der Controller ist als Web-API-Endpunkt konzipiert und folgt dem RESTful-Prinzip.
 
-## POST /api/Login/Login
+### POST /api/Login/Login
 
 Body: Anmeldedaten des Benutzers
 ```json
@@ -139,6 +139,50 @@ Fehlerantwowrt: Status: Bad Request (400):
 - Username oder Passwort wurden nicht angegeben
 - Das eingegeben Passwort ist falsch
 - Der eingegebene Benutzername existiert nicht
+
+## Firma-Controller
+
+Der Firma-Controller ist verantwortlich für die Verwaltung von Firmendaten über RESTful Endpunkte.
+
+### GET /api/Firma
+
+Erfolgreiche Antwort: Status: OK (200)
+```json
+  {
+    "firmaId": 12,
+    "name": "Firma XY"
+  }
+
+```
+Fehlerantwowrt: Status: Bad Request (400)
+- Firma wurde nicht gefunden
+
+### POST /api/Firma
+
+Erfolgreiche Antwort: Status: No Content (204)
+
+Fehlerantwowrt: Status: Internal Server Error (500)
+
+## Produktgruppe-Controller
+
+Der Produktgruppe-Controller ist verantwortlich für die Verwaltung von Produktgruppendaten über RESTful Endpunkte.
+
+### GET /api/Produktgruppe
+Erfolgreiche Antwort: Status: OK (200)
+```json
+ {
+    "produktgruppeId": 0,
+    "name": "string"
+  }
+```  
+Fehlerantwowrt: Status: Not Found (404)
+
+## ProduktgruppeKunde-Controller
+
+### Post /api/ProduktgruppeKunde
+Erfolgreiche Antwort: Status: No Content (204)
+
+Fehlerantwowrt: Status: Internal Server Error (500)
 
 
 ## Authentifizierung und Token-Erstellung
